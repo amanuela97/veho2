@@ -1,6 +1,8 @@
 language: node_js
 node_js:
-  - "stable"
+  - "node"
+cache: npm  
+
 install:
   - "npm ci"
 script:
