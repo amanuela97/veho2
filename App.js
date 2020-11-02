@@ -1,35 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState('');
-  const [courseGoals, setCourseGoals] = useState([]);
 
-  const goalInputHandler = (enteredText) => {
-    setEnteredGoal(enteredText);
-  };
+const App = () => {
 
-  const addGoalHandler = () => {
-    //spread opertator 
-    setCourseGoals(currentGoals => [...currentGoals, enteredGoal]);
-  };
+
 
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput placeholder= "Course goal" style={styles.input} onChangeText={goalInputHandler}/>
-        <Button title="ADD" onPress={addGoalHandler}/>
-      </View>
-      <View>
-        <ScrollView>
-          {courseGoals.map((goal) =>
-          <View key={goal} style={styles.listItem}>
-            <Text>{goal}</Text>   
-         </View>
-          )}
-        </ScrollView>
-      </View>
+      <Text>Hello</Text>
     </View>
   );
 }
@@ -37,23 +16,7 @@ export default function App() {
 const styles = StyleSheet.create({
   screen:{
     padding: 50    
-  },
-  inputContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  input:{
-    width: "80%",
-    borderColor: "black",
-    borderWidth: 1,
-    padding: 10
-  },
-  listItem:{
-    padding: 10,
-    marginVertical: 10,
-    backgroundColor: "#ccc",
-    borderColor: "black",
-    borderWidth: 1,
   }
 });
+
+export default App;
