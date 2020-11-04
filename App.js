@@ -24,15 +24,15 @@ const App = () => {
   if (!fontReady) {
       console.log('Waiting for fonts...');
       return (    
-      <Expo.AppLoading />
+        <Expo.AppLoading />
       );
   }
 
 
   return (
-    <Navigator  />
+    <Navigator />
   );
-}
+};
 
 const styles = StyleSheet.create({
   screen:{

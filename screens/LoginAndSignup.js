@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Content, Header, Title, Tabs, Tab} from 'native-base';
-import Login from './Login'
-import SignUp from './Signup'
+import Login from './Login';
+import SignUp from './Signup';
 
 const LoginAndSignUp = (props) =>{
 

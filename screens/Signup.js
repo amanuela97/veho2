@@ -49,7 +49,7 @@ const SignUp = (props) =>{
             Firebase.auth()
             .createUserWithEmailAndPassword(user.email, user.password)
             .then(() => props.navigation.navigate('App'))
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
         } catch (e) {
             console.log('registerAsync error: ', e.message);
             setErrors((errors) =>
