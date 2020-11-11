@@ -1,43 +1,50 @@
-import React, { useState, useEffect }  from 'react';
-import {StyleSheet} from 'react-native';
-import * as Expo from "expo";
-import * as Font from 'expo-font';
-import Navigator from './navigation/Navigator';
+import React, { useCallback, useMemo, useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
 
+import { AppLoading } from "expo";
+import fonts from "./assets/fonts/Fonts";
+import {
+  Provider as PaperProvider,
+  DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperDefaultTheme,
+} from "react-native-paper";
+import {
+  NavigationContainer,
+  DefaultTheme as NativeDefaultTheme,
+} from "@react-navigation/native";
+import AuthNavigator from "./navigation/AuthNavigator";
+import MainNavigator from "./navigation/MainNavigator";
+import { CustomLightNativeTheme } from "./config/themes/LightNativeTheme";
+import { CustomNativeDarkTheme } from "./config/themes/DarkNativeTheme";
+import { CustomThemeProvider, useCustomTheme } from "./context/ThemeContext";
+import { AppContext } from "./context/AppThemeContext";
 
-const App = () => {
+export default function App() {
+  const [isDarkTheme, setDarkTheme] = useState(false);
+  let loadFont = fonts();
+  const toggleTheme = useCallback(() => {
+    setDarkTheme(!isDarkTheme);
+  }, [isDarkTheme]);
+  const appTheme = isDarkTheme ? CustomNativeDarkTheme : CustomLightNativeTheme;
+  //const appTheme = CustomNativeDarkTheme;
 
-  const [fontReady, setFontReady] = useState(false);
-
-  const loadFonts = async () => {
-      await Font.loadAsync({
-            Roboto: require("native-base/Fonts/Roboto.ttf"),
-            Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      });
-      setFontReady(true);
-  };
-
-  useEffect(() => {
-          loadFonts();
-  }, []);
-
-  if (!fontReady) {
-      console.log('Waiting for fonts...');
-      return (    
-        <Expo.AppLoading />
-      );
+  if (!loadFont) {
+    return <AppLoading />;
+  } else {
+    return (
+      <AppContext.Provider value={{ toggleTheme, isDarkTheme }}>
+        <PaperProvider theme={appTheme}>
+          <NavigationContainer theme={appTheme}>
+            <MainNavigator />
+          </NavigationContainer>
+        </PaperProvider>
+      </AppContext.Provider>
+    );
   }
-
-
-  return (
-    <Navigator />
-  );
-};
+}
 
 const styles = StyleSheet.create({
-  screen:{
-    padding: 50    
-  }
+  container: {
+    margin: 100,
+  },
 });
-
-export default App;
