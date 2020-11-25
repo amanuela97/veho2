@@ -15,6 +15,9 @@ export const CustomLightNativeTheme = {
     textLight: "#6e6969",
     drawer: "white",
     header: "#fafafa",
+    chargerList: "#fafafa",
     negative: "black",
+    tab: "#202020",
+    separator: "#f8f4f4",
   },
 };

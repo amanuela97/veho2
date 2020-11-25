@@ -3,7 +3,12 @@ import { StyleSheet, Image } from "react-native";
 import * as Yup from "yup";
 
 import Screen from "../components/Screen";
-import { Form, FormField, SubmitButton } from "../components/forms";
+import {
+  ErrorMessage,
+  Form,
+  FormField,
+  SubmitButton,
+} from "../components/forms";
 import { View } from "native-base";
 import Logo from "../components/Logo";
 import AppText from "../components/AppText";
@@ -14,6 +19,10 @@ import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
 import AppButton from "../components/AppButton";
 import { useTheme } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
+import { result } from "validate.js";
+import useApi from "../hooks/useApi";
+import { loginUser } from "../Api/AppAuth";
+import { db_auth } from "../Api/Db";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -22,7 +31,19 @@ const validationSchema = Yup.object().shape({
 
 function LoginScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const [loginErrorVisible, setLoginErrorVisible] = useState(false);
   const { colors } = useTheme();
+  const loginApi = useApi(loginUser);
+  console.log("presssed");
+
+  console.log(db_auth.currentUser);
+
+  const handleSubmit = async (userInfo) => {
+    setLoginErrorVisible(false);
+    const result = await loginApi.request(userInfo);
+    setLoginErrorVisible(result.error);
+    console.log(result.error);
+  };
   return (
     <Screen style={styles.container}>
       <Animatable.View
@@ -40,7 +61,7 @@ function LoginScreen({ navigation }) {
         <AppText style={styles.login}>Welcome!</AppText>
         <Form
           initialValues={{ email: "", password: "" }}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
           <FormField
@@ -60,6 +81,10 @@ function LoginScreen({ navigation }) {
             placeholder="Password"
             secureTextEntry
             textContentType="password"
+          />
+          <ErrorMessage
+            visible={loginErrorVisible}
+            error="Invalid login credential"
           />
           <TouchableOpacity
             style={styles.forgetPassword}

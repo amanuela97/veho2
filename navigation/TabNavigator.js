@@ -6,6 +6,8 @@ import ScheduleScreen from "../screens/ScheduleScreen";
 import ChargerScreen from "../screens/ChargerScreen";
 import { useTheme } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import ProfileScreen from "../screens/ProfileScreen";
+import ProfileStackNav from "./ProfileStackNav";
 const Tab = createMaterialBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -14,7 +16,7 @@ const TabNavigator = () => {
     <Tab.Navigator
       initialRouteName="Booking"
       activeColor={colors.primary}
-      inactiveColor={colors.text}
+      inactiveColor={colors.tab}
       barStyle={{ backgroundColor: colors.header }}
     >
       <Tab.Screen
@@ -47,17 +49,17 @@ const TabNavigator = () => {
         options={{
           tabBarLabel: "Chargers",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="account" color={color} size={26} />
+            <FontAwesome5 name="charging-station" size={22} color={color} />
           ),
         }}
       />
       <Tab.Screen
         name="Profile"
-        component={ChargerScreen}
+        component={ProfileStackNav}
         options={{
           tabBarLabel: "Profile",
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="charging-station" size={26} color={color} />
+            <MaterialCommunityIcons name="account" color={color} size={26} />
           ),
         }}
       />

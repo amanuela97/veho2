@@ -1,13 +1,14 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
-import BookingDetailScreen from "../screens/BookingDetailScreen";
+
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 import { Avatar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "@react-navigation/native";
+import ChargerDetailScreen from "../screens/ChargerDetailScreen";
 const Stack = createStackNavigator();
 
 //
@@ -66,7 +67,7 @@ const HomeStack = ({ navigation }) => {
           ),
         }}
       />
-      <Stack.Screen name="Booking" component={BookingDetailScreen} />
+      <Stack.Screen name="Charger" component={ChargerDetailScreen} />
     </Stack.Navigator>
   );
 };

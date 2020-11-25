@@ -12,9 +12,12 @@ export const CustomNativeDarkTheme = {
     primary: "#00adef",
     secondary: "#fb3664",
     textMain: "white",
-    textLight: "#6e6969",
+    textLight: "#d6d6d6",
     drawer: "#333333",
     header: "#333333",
     negative: "white",
+    tab: "white",
+    separator: "#828282",
+    chargerList: "#16161d",
   },
 };

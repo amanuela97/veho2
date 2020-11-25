@@ -24,13 +24,14 @@ function AppPicker({
   placeholder,
   selectedItem,
   width = "100%",
+  backgroundColor = "white",
 }) {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
-        <View style={[styles.container, { width }]}>
+        <View style={[styles.container, { width, backgroundColor }]}>
           {icon && (
             <MaterialCommunityIcons
               name={icon}
@@ -80,7 +81,7 @@ function AppPicker({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: defaultStyles.colors.light,
-    borderRadius: 25,
+    borderRadius: 10,
     flexDirection: "row",
     padding: 15,
     marginVertical: 10,

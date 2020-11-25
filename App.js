@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 import { AppLoading } from "expo";
@@ -16,35 +16,52 @@ import AuthNavigator from "./navigation/AuthNavigator";
 import MainNavigator from "./navigation/MainNavigator";
 import { CustomLightNativeTheme } from "./config/themes/LightNativeTheme";
 import { CustomNativeDarkTheme } from "./config/themes/DarkNativeTheme";
-import { CustomThemeProvider, useCustomTheme } from "./context/ThemeContext";
 import { AppContext } from "./context/AppThemeContext";
+import { db_auth, db_store } from "./Api/Db";
+import { AppAuthContext } from "./context/AppAuthContext";
+import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default function App() {
   const [isDarkTheme, setDarkTheme] = useState(false);
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null);
   let loadFont = fonts();
   const toggleTheme = useCallback(() => {
     setDarkTheme(!isDarkTheme);
   }, [isDarkTheme]);
   const appTheme = isDarkTheme ? CustomNativeDarkTheme : CustomLightNativeTheme;
-  //const appTheme = CustomNativeDarkTheme;
 
-  if (!loadFont) {
+  const onAuthStateChanged = async (user) => {
+    console.log("user state changed");
+    setUser(user);
+    if (user != null) {
+      const data = await db_store.collection("users").doc(user.uid).get();
+      setUser(data.data());
+    }
+    if (initializing) setInitializing(false);
+  };
+
+  useEffect(() => {
+    const unsubscribe = db_auth.onAuthStateChanged(onAuthStateChanged);
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  if (!loadFont || initializing) {
     return <AppLoading />;
   } else {
     return (
       <AppContext.Provider value={{ toggleTheme, isDarkTheme }}>
         <PaperProvider theme={appTheme}>
-          <NavigationContainer theme={appTheme}>
-            <MainNavigator />
-          </NavigationContainer>
+          <AppAuthContext.Provider value={{ user, setUser }}>
+            <NavigationContainer theme={appTheme}>
+              {user ? <MainNavigator /> : <AuthNavigator />}
+            </NavigationContainer>
+          </AppAuthContext.Provider>
         </PaperProvider>
       </AppContext.Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    margin: 100,
-  },
-});
+1;
