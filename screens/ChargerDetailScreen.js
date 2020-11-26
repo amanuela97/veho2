@@ -25,7 +25,7 @@ function ChargerDetailScreen({ route, navigation }) {
   const [initializing, setInitializer] = useState(true);
   const [pickedItem, setPickedItem] = useState("");
   const { charger } = route.params;
-  const user = useContext(AppAuthContext);
+  const {user} = useContext(AppAuthContext);
   const createQueueApi = useApi(createQueue);
   const { colors } = useTheme();
 

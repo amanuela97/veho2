@@ -35,6 +35,7 @@ function HomeScreen({ navigation }) {
   };
 
   const queue = async (chargers) => {
+    if(chargers.length > 0) {
     setUserQueue(false);
     const queueList = [];
     await chargers.forEach((charger) => {
@@ -57,6 +58,7 @@ function HomeScreen({ navigation }) {
 
     await setUserQueue(queueList);
     setQueueVisible(true);
+  }
   };
   const handleSearch = (text) => {
     const userInput = text.toLowerCase();
@@ -153,7 +155,7 @@ function HomeScreen({ navigation }) {
             </Card>
           </View>
         </View>
-        <FlatList
+       {chargers.length > 0 && <FlatList
           data={chargers}
           keyExtractor={(list) => list.id}
           renderItem={({ item }) => (
@@ -166,7 +168,7 @@ function HomeScreen({ navigation }) {
               }
             />
           )}
-        />
+        />}
       </View>
     </View>
   );

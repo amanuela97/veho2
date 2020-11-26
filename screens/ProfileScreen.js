@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, View, FlatList } from "react-native";
 
 import { ListItem, ListItemSeparator } from "../components/lists";
@@ -8,11 +8,35 @@ import Screen from "../components/Screen";
 import { Header } from "@react-navigation/stack";
 import { useTheme } from "@react-navigation/native";
 import { AppAuthContext } from "../context/AppAuthContext";
-import { db_auth } from "../Api/Db";
+import { db_auth, db_store } from "../Api/Db";
 
 function ProfileScreen({ navigation }) {
   const { user } = useContext(AppAuthContext);
   const { colors } = useTheme();
+ /*  const getData = async () => {
+
+    const docu = await db_store.collection("veho").doc();
+    const docuQ = await db_store
+      .collection("veho")
+      .doc(docu.id)
+      .set({
+        type:'charger',
+        id:docu.id,
+        name:'charger seveen',
+        comment:{userId:[{'comment':'am waiting','time':'12:30','userName':'beselam'}]},
+        queue: [
+          
+        ],
+        })
+   
+  }; */
+  useEffect(() => {
+    /*  const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
+       displayChargers();
+     });
+     return () => unsubscribe(); */
+    
+   }, []);
 
   return (
     <Screen style={styles.screen}>
