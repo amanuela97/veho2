@@ -19,7 +19,7 @@ function QueueModal({ isModalVisible, setVisible, item }) {
   const { colors } = useTheme();
 
   const cancelQueueFun = async () => {
-    setVisible(false);
+    await setVisible(false);
     const queue = await cancelQueueApi.request(
       item.chargerId,
       item.queueObject
@@ -47,6 +47,9 @@ function QueueModal({ isModalVisible, setVisible, item }) {
     );
   };
   console.log(cancelQueueApi.data);
+  if (!isModalVisible) {
+    return null;
+  }
   return (
     <Modal
       testID={"modal"}
@@ -111,11 +114,6 @@ function QueueModal({ isModalVisible, setVisible, item }) {
 }
 
 const styles = StyleSheet.create({
-  forgetPassword: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    margin: 10,
-  },
   modelCard: {
     width: "100%",
     height: hp("70%"),
