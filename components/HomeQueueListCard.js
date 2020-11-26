@@ -29,11 +29,11 @@ function HomeQueueListCard({ onPress, currentQueue, cardVisible }) {
           <View style={styles.rightContainer}>
             <View style={styles.queueContainer}>
               <AppText style={{ fontSize: 30, marginTop: -2 }}>
-                {currentQueue.queue}
+                {currentQueue.queue === 1 ? "" : currentQueue.queue}
               </AppText>
 
               <AppText style={{ marginTop: -4, fontSize: 10 }}>
-                Position
+                {currentQueue.queue === 1 ? "your turn" : "Position"}
               </AppText>
             </View>
           </View>

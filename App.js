@@ -32,8 +32,9 @@ export default function App() {
   const appTheme = isDarkTheme ? CustomNativeDarkTheme : CustomLightNativeTheme;
 
   const onAuthStateChanged = async (user) => {
+    setInitializing(true);
     console.log("user state changed");
-    setUser(user);
+    await setUser(user);
     if (user != null) {
       const data = await db_store.collection("users").doc(user.uid).get();
       setUser(data.data());

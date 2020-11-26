@@ -25,7 +25,7 @@ function ChargerDetailScreen({ route, navigation }) {
   const [initializing, setInitializer] = useState(true);
   const [pickedItem, setPickedItem] = useState("");
   const { charger } = route.params;
-  const user = useContext(AppAuthContext);
+  const { user } = useContext(AppAuthContext);
   const createQueueApi = useApi(createQueue);
   const { colors } = useTheme();
 
@@ -120,6 +120,12 @@ function ChargerDetailScreen({ route, navigation }) {
               title={item.userName === user.userName ? "You" : item.userName}
               image={require("../assets/profileP.jpg")}
               backgroundColor={colors.header}
+              onPress={() =>
+                navigation.navigate("Comment", {
+                  comment: charger.comment,
+                  queueOwner: item,
+                })
+              }
             />
           )}
         />

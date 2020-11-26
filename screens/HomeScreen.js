@@ -29,13 +29,13 @@ function HomeScreen({ navigation }) {
 
   const displayChargers = async () => {
     const chargers = await chargerListApi.request();
-    setChargers(chargers.data);
+    await setChargers(chargers.data);
     queue(chargers.data);
     setChargerSearch(chargers.data);
   };
 
   const queue = async (chargers) => {
-    setUserQueue(false);
+    setQueueVisible(false);
     const queueList = [];
     await chargers.forEach((charger) => {
       const id = charger.id;
@@ -54,7 +54,7 @@ function HomeScreen({ navigation }) {
         }
       });
     });
-
+    console.log("finalll");
     await setUserQueue(queueList);
     setQueueVisible(true);
   };
