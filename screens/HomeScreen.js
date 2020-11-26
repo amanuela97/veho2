@@ -57,7 +57,6 @@ function HomeScreen({ navigation }) {
     console.log("finalll");
     await setUserQueue(queueList);
     setQueueVisible(true);
-  }
   };
   const handleSearch = (text) => {
     const userInput = text.toLowerCase();
@@ -71,7 +70,7 @@ function HomeScreen({ navigation }) {
     const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
       displayChargers();
     });
-    return () => unsubscribe();
+    return () => unsubscribe();s
   }, []);
 
   const { colors } = useTheme();
@@ -154,7 +153,7 @@ function HomeScreen({ navigation }) {
             </Card>
           </View>
         </View>
-       {chargers.length > 0 && <FlatList
+        <FlatList
           data={chargers}
           keyExtractor={(list) => list.id}
           renderItem={({ item }) => (
@@ -167,7 +166,7 @@ function HomeScreen({ navigation }) {
               }
             />
           )}
-        />}
+        />
       </View>
     </View>
   );
