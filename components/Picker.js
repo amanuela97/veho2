@@ -58,7 +58,9 @@ function AppPicker({
           <Button title="Close" onPress={() => setModalVisible(false)} />
           <FlatList
             data={items}
-            keyExtractor={(item) => item.itemName}
+            keyExtractor={(item) =>
+              item.vehicleId ? item.vehicleId : item.itemName
+            }
             numColumns={numberOfColumns}
             renderItem={({ item }) => (
               <PickerItemComponent

@@ -17,7 +17,7 @@ export const CustomNativeDarkTheme = {
     header: "#333333",
     negative: "white",
     tab: "white",
-    separator: "#828282",
+    separator: "#202020",
     chargerList: "#16161d",
   },
 };

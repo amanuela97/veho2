@@ -1,5 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, TextInput, Image } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  Image,
+  Alert,
+} from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -7,7 +18,7 @@ import { useTheme } from "@react-navigation/native";
 import { db_auth, db_store } from "../Api/Db";
 import { AppAuthContext } from "../context/AppAuthContext";
 import { set } from "react-native-reanimated";
-import { getChargers } from "../Api/DbRequests";
+import { chargerListener, getChargers, getQueueList } from "../Api/DbRequests";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { Card } from "react-native-paper";
@@ -16,48 +27,37 @@ import HomeChargerList from "../components/HomeChargerList";
 import HomeQueueListCard from "../components/HomeQueueListCard";
 import QueueModal from "../components/QueueModal";
 import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
+import { MaterialIcons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
 function HomeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [error, setError] = useState();
   const [chargers, setChargers] = useState([]);
+  const [chargingCars, setChargingCars] = useState([]);
   const [queueModalContent, setQueueModalContent] = useState({});
   const [queueVisible, setQueueVisible] = useState(false);
   const [userQueue, setUserQueue] = useState([]);
+  const [totalQueue, setTotalQueue] = useState([]);
   const [chargerSearch, setChargerSearch] = useState([]);
   const { user } = useContext(AppAuthContext);
   const chargerListApi = useApi(getChargers);
+  const queueListApi = useApi(getQueueList);
 
   const displayChargers = async () => {
     const chargers = await chargerListApi.request();
     await setChargers(chargers.data);
-    queue(chargers.data);
     setChargerSearch(chargers.data);
+    //  handleChargingCars(chargers.data);
   };
 
-  const queue = async (chargers) => {
-    setQueueVisible(false);
-    const queueList = [];
-    await chargers.forEach((charger) => {
-      const id = charger.id;
-      const chargerName = charger.name;
-      const queue = charger.queue;
-      queue.forEach((q) => {
-        if (q.userId === user.userId) {
-          const index = queue.indexOf(q) + 1;
-          const userQueue = {
-            chargerName: chargerName,
-            queue: index,
-            chargerId: id,
-            queueObject: q,
-          };
-          queueList.push(userQueue);
-        }
-      });
+  /*  const handleChargingCars = async (chargers) => {
+    const cars = await chargers.filter((item) => {
+      const currentUsr = item.currentUser;
+      return currentUsr.currentUserId === user.userId;
     });
-    console.log("finalll");
-    await setUserQueue(queueList);
-    setQueueVisible(true);
-  };
+    await setChargingCars(cars);
+  }; */
   const handleSearch = (text) => {
     const userInput = text.toLowerCase();
     const newList = chargerSearch.filter((charger) =>
@@ -65,12 +65,36 @@ function HomeScreen({ navigation }) {
     );
     setChargers(newList);
   };
+  const handleGetQueueList = async () => {
+    const list = await queueListApi.request();
+    if (!list.error) {
+      setTotalQueue(list.data);
+    }
+  };
 
   useEffect(() => {
+    handleGetQueueList();
     const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
+      let newList = [];
+      snapshot.forEach((doc) => {
+        newList.push(doc.data());
+      });
+      chargerListener(newList);
       displayChargers();
     });
-    return () => unsubscribe();s
+    const unsubscribeQueue = db_store
+      .collection("queue")
+      .onSnapshot((snapshot) => {
+        snapshot.forEach((doc) => {
+          const newList = doc.data().queue;
+
+          setTotalQueue(newList);
+        });
+      });
+    return () => {
+      unsubscribe();
+      unsubscribeQueue();
+    };
   }, []);
 
   const { colors } = useTheme();
@@ -80,27 +104,51 @@ function HomeScreen({ navigation }) {
   }
   return (
     <View style={styles.container}>
+      <Card
+        style={styles.floatingBtn}
+        onPress={() => navigation.navigate("ChargerQueue")}
+      >
+        <TouchableOpacity>
+          <View style={styles.floatingBtnInner}>
+            <MaterialIcons name="queue" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      </Card>
+
       <View style={styles.queueContainer}>
         <View style={styles.innerContainer}>
-          {userQueue.length < 1 ? (
+          {(totalQueue.length !== 0 || totalQueue !== undefined) && (
+            <TouchableOpacity
+              style={styles.totalQueueTO}
+              onPress={() =>
+                navigation.navigate("AllQueueScreen", {
+                  queue: totalQueue,
+                  user: user,
+                })
+              }
+            >
+              <View style={styles.totalQueueContainer}>
+                <AppText style={{ color: "white", width: "100%" }}>
+                  {totalQueue.length} users on the Queue
+                </AppText>
+              </View>
+            </TouchableOpacity>
+          )}
+          {chargingCars.length === 0 || chargingCars === undefined ? (
             <View
               style={[
                 styles.noQueueContainer,
                 { backgroundColor: colors.header },
               ]}
             >
-              <AppText style={{ color: colors.text }}>
-                No queue available
-              </AppText>
+              <AppText style={{ color: colors.text }}> no car charging</AppText>
             </View>
           ) : (
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
-              data={userQueue}
-              keyExtractor={(list) =>
-                list.chargerId + list.chargerName + list.queue
-              }
+              data={chargingCars}
+              keyExtractor={(list) => list.id}
               renderItem={({ item }) => (
                 <HomeQueueListCard
                   onPress={() => {
@@ -108,7 +156,7 @@ function HomeScreen({ navigation }) {
                     setModalVisible(true);
                   }}
                   cardVisible={queueVisible}
-                  currentQueue={item}
+                  currentCharge={item}
                 />
               )}
             />
@@ -126,7 +174,7 @@ function HomeScreen({ navigation }) {
       <View style={styles.chargerContainer}>
         <View style={styles.chargerSectionHeader}>
           <View style={{ width: "100%" }}>
-            <View>
+            <View style={{ alignSelf: "flex-start", width: "100%" }}>
               <AppText style={[styles.sectionTitle, { color: colors.text }]}>
                 chargers
               </AppText>
@@ -159,11 +207,26 @@ function HomeScreen({ navigation }) {
           renderItem={({ item }) => (
             <HomeChargerList
               item={item}
-              onPress={() =>
-                navigation.navigate("Charger", {
-                  charger: item,
-                })
-              }
+              onPress={() => {
+                if (item.status === "free") {
+                  navigation.navigate("Charger", {
+                    charger: item,
+                  });
+                }
+                if (item.status === "busy") {
+                  Alert.alert(
+                    "",
+                    "this charger is currently busy, please select a free charger",
+                    [
+                      {
+                        text: "ok ",
+                        onPress: () => {},
+                      },
+                    ],
+                    { cancelable: true }
+                  );
+                }
+              }}
             />
           )}
         />
@@ -178,11 +241,43 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  floatingBtn: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#00adef",
+    position: "absolute",
 
+    elevation: 4,
+    right: 30,
+    justifyContent: "center",
+    alignItems: "center",
+
+    bottom: 20,
+    zIndex: 2,
+  },
+  floatingBtnInner: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   queueContainer: {
     flex: 1,
     width: "100%",
 
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  totalQueueContainer: {
+    paddingVertical: 10,
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  totalQueueTO: {
+    backgroundColor: "#333333",
+    width: wp("100%"),
     justifyContent: "center",
     alignItems: "center",
   },

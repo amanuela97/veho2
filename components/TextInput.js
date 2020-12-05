@@ -4,10 +4,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import defaultStyles from "../config/styles";
 import { Divider } from "react-native-paper";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
 function AppTextInput({ icon, width = "100%", ...otherProps }) {
   return (
@@ -43,7 +39,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    height: hp("3%"),
+    height: 25,
     fontFamily: "OpenSans_400Regular",
     width: "90%",
   },

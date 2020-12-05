@@ -6,7 +6,7 @@ import Text from "./AppText";
 function PickerItem({ item, onPress }) {
   return (
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.text}>{item.itemName}</Text>
+      <Text style={styles.text}>{item.name ? item.name : item.itemName}</Text>
     </TouchableOpacity>
   );
 }

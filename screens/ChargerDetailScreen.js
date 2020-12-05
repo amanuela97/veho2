@@ -18,6 +18,7 @@ import PickerItem from "../components/PickerItem";
 import colors from "../config/colors";
 import { useTheme } from "@react-navigation/native";
 import UploadScreen from "./UploadScreen";
+import { Card } from "native-base";
 
 function ChargerDetailScreen({ route, navigation }) {
   const [error, setError] = useState();
@@ -58,6 +59,25 @@ function ChargerDetailScreen({ route, navigation }) {
   if (createQueueApi.loading) {
     return <ActivityIndicator visible={true} />;
   }
+  if (charger.status === "busy")
+    return (
+      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+        <Card
+          style={{
+            paddingVertical: 40,
+            paddingHorizontal: 10,
+            backgroundColor: "orange",
+            width: "90%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <View>
+            <AppText>This charger is currently busy</AppText>
+          </View>
+        </Card>
+      </View>
+    );
   return (
     <View style={styles.container}>
       <UploadScreen

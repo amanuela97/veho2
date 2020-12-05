@@ -8,33 +8,30 @@ import {
 } from "react-native-responsive-screen";
 import { useTheme } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
-function HomeQueueListCard({ onPress, currentQueue, cardVisible }) {
+import { Feather } from "@expo/vector-icons";
+function HomeQueueListCard({ onPress, currentCharge, cardVisible }) {
   const { colors } = useTheme();
-
+  const car = currentCharge.currentUser;
+  console.log(currentCharge);
   return (
     <Card style={styles.container}>
       <TouchableOpacity onPress={onPress}>
         <View style={styles.innerContainer}>
           <View style={styles.leftContainer}>
-            <AppText style={styles.chargerName}>
-              {currentQueue.chargerName}
+            <AppText style={styles.carName}>
+              {car.currentVehicleName ? car.currentVehicleName : ""}
             </AppText>
-            <AppText style={styles.vehicleData}>no vehicle data</AppText>
+            <AppText style={styles.chargerName}>{currentCharge.name}</AppText>
+            {/* <AppText style={styles.vehicleData}>no vehicle data</AppText>
             <Image
               source={require("../assets/no-car.png")}
               style={styles.noVehicleIcon}
-            />
+            /> */}
           </View>
           <View style={styles.rightContainer}>
             <View style={styles.queueContainer}>
-              <AppText style={{ fontSize: 30, marginTop: -2 }}>
-                {currentQueue.queue === 1 ? "" : currentQueue.queue}
-              </AppText>
-
-              <AppText style={{ marginTop: -4, fontSize: 10 }}>
-                {currentQueue.queue === 1 ? "your turn" : "Position"}
-              </AppText>
+              <AppText style={{ fontSize: 20, marginTop: -2 }}>100%</AppText>
+              <Feather name="battery-charging" size={24} color="black" />
             </View>
           </View>
         </View>
@@ -64,7 +61,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   chargerName: {
-    fontSize: wp("4%"),
+    fontSize: wp("3%"),
+    fontFamily: "OpenSans_600SemiBold",
+    color: "white",
+  },
+  carName: {
+    fontSize: wp("3.5%"),
     fontFamily: "OpenSans_600SemiBold",
     color: "white",
   },

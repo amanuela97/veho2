@@ -7,6 +7,8 @@ import TabNavigator from "./TabNavigator";
 import { DrawerContent } from "./DrawerContents";
 import SettingScreen from "../screens/SettingScreen";
 import FeedbackScreen from "../screens/FeedbackScreen";
+import { addVehicle } from "../Api/DbRequests";
+import AddVehicleScreen from "../screens/AddVehicleScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -21,7 +23,7 @@ const MainNavigator = () => (
       options={{ headerShown: false }}
       component={TabNavigator}
     />
-    <Drawer.Screen name="Vehicle" component={VehicleStatus} />
+    <Drawer.Screen name="Vehicle" component={AddVehicleScreen} />
     <Drawer.Screen name="Setting" component={SettingScreen} />
     <Drawer.Screen name="Feedback" component={FeedbackScreen} />
   </Drawer.Navigator>

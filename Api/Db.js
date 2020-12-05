@@ -1,4 +1,6 @@
-import firebase from "firebase";
+import * as firebase from "firebase";
+import "firebase/firestore";
+import "firebase/auth";
 
 import {
   API_KEY_B,
@@ -22,6 +24,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const db = firebase.initializeApp(firebaseConfig);
-export const db_auth = db.auth();
-export const db_store = db.firestore();
+
+firebase.initializeApp(firebaseConfig);
+export const db_auth = firebase.auth();
+export const db_store = firebase.firestore();

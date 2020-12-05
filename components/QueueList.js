@@ -11,7 +11,7 @@ import {
 
 import AppText from "./AppText";
 
-function HomeChargerList({ onPress, item, renderRightActions }) {
+function QueueList({ onPress, item, renderRightActions }) {
   const { colors } = useTheme();
   const length = item.status;
   const color = () => {
@@ -33,7 +33,9 @@ function HomeChargerList({ onPress, item, renderRightActions }) {
                     color: colors.text,
                   }}
                 >
-                  {item.name}
+                  {item.chargingVehicleName
+                    ? item.chargingVehicleName
+                    : "no vehicle data"}
                 </AppText>
                 <AppText style={{ color: colors.textLight }}>fast</AppText>
               </View>
@@ -45,17 +47,22 @@ function HomeChargerList({ onPress, item, renderRightActions }) {
                   ]}
                 >
                   <AppText
+                    style={{ marginTop: -4, fontSize: 18, color: colors.text }}
+                  >
+                    {item.position}
+                  </AppText>
+                  <AppText
                     style={{ marginTop: -4, fontSize: 10, color: colors.text }}
                   >
-                    {item.status}
+                    position
                   </AppText>
                 </View>
-                <Card
+                {/*  <Card
                   style={[
                     styles.colorBarContainer,
                     { backgroundColor: colorFill },
                   ]}
-                ></Card>
+                ></Card> */}
               </View>
             </View>
           </View>
@@ -69,7 +76,7 @@ const styles = StyleSheet.create({
   container: {
     elevation: 0,
     width: "100%",
-    height: 80,
+    height: hp("12%"),
     marginVertical: 10,
     alignSelf: "center",
     justifyContent: "center",
@@ -96,22 +103,22 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   queueContainer: {
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
 
-    borderRadius: 25,
+    borderRadius: 30,
     justifyContent: "center",
     alignContent: "center",
     alignItems: "center",
   },
   colorBarContainer: {
-    width: 6,
+    width: wp("1.5%"),
     height: "70%",
     elevation: 5,
-    borderRadius: 3,
+    borderRadius: wp("10%"),
     backgroundColor: "orange",
     alignSelf: "flex-end",
   },
 });
 
-export default HomeChargerList;
+export default QueueList;

@@ -10,6 +10,8 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "@react-navigation/native";
 import ChargerDetailScreen from "../screens/ChargerDetailScreen";
 import CommentScreen from "../screens/CommentScreen";
+import CreateQueueScreen from "../screens/CreateQueueScreen";
+import QueueScreen from "../screens/QueueScreen";
 const Stack = createStackNavigator();
 
 //
@@ -70,6 +72,8 @@ const HomeStack = ({ navigation }) => {
       />
       <Stack.Screen name="Charger" component={ChargerDetailScreen} />
       <Stack.Screen name="Comment" component={CommentScreen} />
+      <Stack.Screen name="ChargerQueue" component={CreateQueueScreen} />
+      <Stack.Screen name="AllQueueScreen" component={QueueScreen} />
     </Stack.Navigator>
   );
 };

@@ -25,13 +25,13 @@ function ListItem({
           {image && <Image style={styles.image} source={image} />}
           <View style={styles.detailsContainer}>
             <AppText
-              style={(styles.title, { color: colors.text })}
+              style={[styles.title, { color: colors.text }]}
               numberOfLines={1}
             >
               {title}
             </AppText>
             {subTitle && (
-              <AppText style={(styles.subTitle, { color: colors.textLight })}>
+              <AppText style={[styles.subTitle, { color: colors.textLight }]}>
                 {subTitle}
               </AppText>
             )}
@@ -65,9 +65,11 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
   },
-  subTitle: {},
+  subTitle: {
+    fontSize: 10,
+  },
   title: {
-    fontWeight: "500",
+    fontWeight: "600",
   },
 });
 

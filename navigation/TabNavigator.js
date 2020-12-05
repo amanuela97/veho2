@@ -1,13 +1,13 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import HomeStack from "./HomeStack";
-import ScheduleScreen from "../screens/ScheduleScreen";
-import ChargerScreen from "../screens/ChargerScreen";
 import { useTheme } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import ProfileScreen from "../screens/ProfileScreen";
 import ProfileStackNav from "./ProfileStackNav";
+import VehicleStatus from "../screens/VehicleStatus";
 const Tab = createMaterialBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -23,33 +23,24 @@ const TabNavigator = () => {
         name="Booking"
         component={HomeStack}
         options={{
-          tabBarLabel: "Home",
+          tabBarLabel: "explore",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="home" color={color} size={26} />
+            <MaterialIcons name="explore" size={26} color={color} />
           ),
         }}
       />
-      <Tab.Screen
-        name="Schedule"
-        component={ScheduleScreen}
-        options={{
-          tabBarLabel: "Schedule",
-          tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="calendar-clock"
-              color={color}
-              size={26}
-            />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="EV Chargers"
-        component={ChargerScreen}
+        component={VehicleStatus}
         options={{
-          tabBarLabel: "Chargers",
+          tabBarLabel: "vehicles",
           tabBarIcon: ({ color }) => (
-            <FontAwesome5 name="charging-station" size={22} color={color} />
+            <MaterialCommunityIcons
+              name="car-electric"
+              size={22}
+              color={color}
+            />
           ),
         }}
       />
@@ -57,7 +48,7 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileStackNav}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: "profile",
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" color={color} size={26} />
           ),

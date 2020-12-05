@@ -3,6 +3,7 @@ import { View, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../../config/colors";
+import AppText from "../AppText";
 
 function ListItemDeleteAction({ onPress }) {
   return (
@@ -13,6 +14,7 @@ function ListItemDeleteAction({ onPress }) {
           size={35}
           color={colors.white}
         />
+        <AppText style={{ fontSize: 10, color: "white" }}>Vehicle</AppText>
       </View>
     </TouchableWithoutFeedback>
   );

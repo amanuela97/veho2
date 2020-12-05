@@ -43,25 +43,12 @@ export function DrawerContent(props) {
             <DrawerItem
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
-                  name="calendar-clock"
-                  size={24}
-                  color={colors.text}
-                />
-              )}
-              label="Schedule"
-              onPress={() => {
-                props.navigation.navigate("Schedule");
-              }}
-            />
-            <DrawerItem
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
                   name="car-electric"
                   size={24}
                   color={colors.text}
                 />
               )}
-              label="Vehicle status"
+              label="Add Vehicle"
               onPress={() => {
                 props.navigation.navigate("Vehicle");
               }}
