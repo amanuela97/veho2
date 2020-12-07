@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Image } from "react-native";
 import * as Yup from "yup";
 
@@ -23,6 +23,7 @@ import { result } from "validate.js";
 import useApi from "../hooks/useApi";
 import { loginUser } from "../Api/AppAuth";
 import { db_auth } from "../Api/Db";
+import { AuthContextMain } from "../context/AppAuthContextMain";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -31,9 +32,10 @@ const validationSchema = Yup.object().shape({
 
 function LoginScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const { login } = useContext(AuthContextMain);
   const [loginErrorVisible, setLoginErrorVisible] = useState(false);
   const { colors } = useTheme();
-  const loginApi = useApi(loginUser);
+  const loginApi = useApi(login);
   console.log("presssed");
 
   console.log(db_auth.currentUser);
@@ -41,8 +43,8 @@ function LoginScreen({ navigation }) {
   const handleSubmit = async (userInfo) => {
     setLoginErrorVisible(false);
     const result = await loginApi.request(userInfo);
+
     setLoginErrorVisible(result.error);
-    console.log(result.error);
   };
   return (
     <Screen style={styles.container}>

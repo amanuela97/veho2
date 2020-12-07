@@ -33,6 +33,19 @@ export const getCharger = async (chargerId) => {
   }
 };
 
+export const getUserData = async () => {
+  try {
+    console.log("request to a charger", db_auth.currentUser.uid);
+    const result = await db_store
+      .collection("users")
+      .doc(db_auth.currentUser.uid)
+      .get();
+    return requestResult(false, result.data());
+  } catch (error) {
+    return requestResult(true, "error getting data");
+  }
+};
+
 export const createQueue = async (userId, userName, chargerId) => {
   try {
     console.log("request to queue");
@@ -95,6 +108,19 @@ export const updatePhoneNumber = async (userInfo, userId) => {
     return requestResult(true, "unable to update");
   }
 };
+export const setUserToken = async (userInfo, userId) => {
+  try {
+    console.log("request to update user info");
+    const token = await db_store.collection("users").doc(userId).update({
+      expoToken: userInfo,
+    });
+
+    return requestResult(false, token);
+  } catch (error) {
+    console.log("error while saving token", error.message);
+    return requestResult(true, "unable save token");
+  }
+};
 
 export const updatePassword = async (userInfo) => {
   try {
@@ -119,6 +145,19 @@ export const addVehicle = async (vehicleInfo) => {
       vehicleId: vehicle.id,
       ownerId: vehicleInfo.ownerId,
       connected: false,
+      otherInfo: "null",
+      assigned: false,
+      batteryState: "null",
+      chargerId: "null",
+      chargerName: "null",
+      chargingActive: false,
+      chargingStatus: "null",
+      endOfChargeTime: "null",
+      position: "0",
+      queue: false,
+      soc: "null",
+      plateNumber: "null",
+      waitingConfirmation: false,
     });
     return requestResult(false, vehicleData);
   } catch (error) {
@@ -139,6 +178,7 @@ export const getVehicles = async () => {
       const data = doc.data();
       vehicles.push(data);
     });
+
     return requestResult(false, vehicles);
   } catch (error) {
     console.log("error while getting vehicles", error.message);

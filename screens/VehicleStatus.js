@@ -26,10 +26,13 @@ import UploadScreen from "./UploadScreen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Card } from "react-native-paper";
 import { fetchCarDetails, fetchToken } from "../Api/CarApi";
-import { db_store } from "../Api/Db";
+import { db_store, func } from "../Api/Db";
 import ListItemCar from "../components/lists/ListItemCar";
 import ListItemAddQueueAction from "../components/lists/ListItemAddQueueAction ";
 import CarAnim from "./CarAnim";
+import useNotifications from "../hooks/useNotifications";
+import AppButton from "../components/AppButton";
+import { result } from "validate.js";
 
 function VehicleStatus({ navigation }) {
   const [error, setError] = useState();
@@ -37,11 +40,13 @@ function VehicleStatus({ navigation }) {
   const [searchVehicles, setSearchVehicles] = useState([]);
   const [uploadVisible, setUploadVisible] = useState(false);
   const { user } = useContext(AppAuthContext);
+
   const getVehicleApi = useApi(getVehicles);
   const deleteVehicleApi = useApi(deleteVehicle);
   const { colors } = useTheme();
   const createQueueApi = useApi(createChargingQueue);
   const cancelQueueApi = useApi(cancelQueue);
+  useNotifications();
   const handleGetVehicles = async () => {
     console.log("caledd");
     const vehiclesList = await getVehicleApi.request();
@@ -119,9 +124,11 @@ function VehicleStatus({ navigation }) {
       setUploadVisible(true);
     }
   };
+
   useEffect(() => {
     const unsubscribeVehicle = db_store
       .collection("vehicle")
+      .where("ownerId", "==", user.userId)
       .onSnapshot((snapshot) => {
         const newList = [];
         snapshot.forEach((doc) => {

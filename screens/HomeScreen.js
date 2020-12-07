@@ -17,8 +17,14 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { db_auth, db_store } from "../Api/Db";
 import { AppAuthContext } from "../context/AppAuthContext";
+
 import { set } from "react-native-reanimated";
-import { chargerListener, getChargers, getQueueList } from "../Api/DbRequests";
+import {
+  chargerListener,
+  getChargers,
+  getQueueList,
+  getUserData,
+} from "../Api/DbRequests";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { Card } from "react-native-paper";
@@ -29,7 +35,7 @@ import QueueModal from "../components/QueueModal";
 import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { AuthContextMain } from "../context/AppAuthContextMain";
 function HomeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [error, setError] = useState();
@@ -40,7 +46,9 @@ function HomeScreen({ navigation }) {
   const [userQueue, setUserQueue] = useState([]);
   const [totalQueue, setTotalQueue] = useState([]);
   const [chargerSearch, setChargerSearch] = useState([]);
-  const { user } = useContext(AppAuthContext);
+  const { user, setUser } = useContext(AppAuthContext);
+  const { userAuth, logout } = useContext(AuthContextMain);
+
   const chargerListApi = useApi(getChargers);
   const queueListApi = useApi(getQueueList);
 
@@ -72,7 +80,13 @@ function HomeScreen({ navigation }) {
     }
   };
 
+  const setUserData = async () => {
+    const userD = await getUserData();
+    setUser(userD.data);
+  };
+
   useEffect(() => {
+    setUserData();
     handleGetQueueList();
     const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
       let newList = [];

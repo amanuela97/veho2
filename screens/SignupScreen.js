@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
 
@@ -21,6 +21,7 @@ import * as Animatable from "react-native-animatable";
 import { registerUser } from "../Api/AppAuth";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
+import { AuthContextMain } from "../context/AppAuthContextMain";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -29,27 +30,16 @@ const validationSchema = Yup.object().shape({
 });
 const categories = [
   {
-    itemName: "Veho vantaa",
-  },
-  {
-    itemName: "Veho espoo",
-  },
-  {
-    itemName: "Company X",
-  },
-  {
-    itemName: "Company y",
-  },
-  {
-    itemName: "Company xx",
+    itemName: "veho",
   },
 ];
 
 function SignupScreen() {
-  const registerApi = useApi(registerUser);
   const [value, setValue] = useState();
-  const [pickedItem, setPickedItem] = useState("Vanta Veho");
+  const [pickedItem, setPickedItem] = useState("veho");
   const [error, setError] = useState();
+  const { register } = useContext(AuthContextMain);
+  const registerApi = useApi(register);
 
   const handlePickerSelection = (item) => {
     setPickedItem(item.itemName);
@@ -68,74 +58,74 @@ function SignupScreen() {
       setError("");
     }
   };
+  if (registerApi.loading) {
+    return <ActivityIndicator visible={true} />;
+  }
 
   return (
-    <>
-      <ActivityIndicator visible={registerApi.loading} />
-      <Screen style={styles.container}>
-        <Animatable.View
-          animation="slideInUp"
-          duration={1000}
-          style={{ flex: 1 }}
-        >
-          <KeyboardAwareScrollView style={styles.keyboardAware}>
-            <AppText style={styles.register}>Register</AppText>
-            <Form
-              initialValues={{ name: "", email: "", password: "" }}
-              onSubmit={handleRegister}
-              validationSchema={validationSchema}
-            >
-              <AppPicker
-                icon="format-list-checkbox"
-                items={categories}
-                numberOfColumns={1}
-                PickerItemComponent={PickerItem}
-                onSelectItem={handlePickerSelection}
-                placeholder={
-                  pickedItem.length < 1 ? " Select Company" : pickedItem
-                }
-                width="100%"
-              />
-              <FormField
-                autoCorrect={false}
-                icon="account"
-                name="name"
-                placeholder="Name"
-              />
-              <FormField
-                autoCapitalize="none"
-                autoCorrect={false}
-                icon="email"
-                keyboardType="email-address"
-                name="email"
-                placeholder="Email"
-                textContentType="emailAddress"
-              />
+    <Screen style={styles.container}>
+      <Animatable.View
+        animation="slideInUp"
+        duration={1000}
+        style={{ flex: 1 }}
+      >
+        <KeyboardAwareScrollView style={styles.keyboardAware}>
+          <AppText style={styles.register}>Register</AppText>
+          <Form
+            initialValues={{ name: "", email: "", password: "" }}
+            onSubmit={handleRegister}
+            validationSchema={validationSchema}
+          >
+            <AppPicker
+              icon="format-list-checkbox"
+              items={categories}
+              numberOfColumns={1}
+              PickerItemComponent={PickerItem}
+              onSelectItem={handlePickerSelection}
+              placeholder={
+                pickedItem.length < 1 ? " Select Company" : pickedItem
+              }
+              width="100%"
+            />
+            <FormField
+              autoCorrect={false}
+              icon="account"
+              name="name"
+              placeholder="Name"
+            />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="email"
+              keyboardType="email-address"
+              name="email"
+              placeholder="Email"
+              textContentType="emailAddress"
+            />
 
-              <FormField
-                autoCapitalize="none"
-                autoCorrect={false}
-                icon="lock"
-                name="password"
-                placeholder="Password"
-                secureTextEntry
-                textContentType="password"
-              />
+            <FormField
+              autoCapitalize="none"
+              autoCorrect={false}
+              icon="lock"
+              name="password"
+              placeholder="Password"
+              secureTextEntry
+              textContentType="password"
+            />
 
-              <PhoneInput
-                placeholder="Enter phone number"
-                value={value}
-                onChangeFormattedText={(item) => setValue(item)}
-              />
-              <View style={styles.button}>
-                <SubmitButton title="Register" />
-              </View>
-            </Form>
-            <ErrorMessage error={error} visible={error} />
-          </KeyboardAwareScrollView>
-        </Animatable.View>
-      </Screen>
-    </>
+            <PhoneInput
+              placeholder="Enter phone number"
+              value={value}
+              onChangeFormattedText={(item) => setValue(item)}
+            />
+            <View style={styles.button}>
+              <SubmitButton title="Register" />
+            </View>
+          </Form>
+          <ErrorMessage error={error} visible={error} />
+        </KeyboardAwareScrollView>
+      </Animatable.View>
+    </Screen>
   );
 }
 
