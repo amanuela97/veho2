@@ -26,7 +26,7 @@ import UploadScreen from "./UploadScreen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Card } from "react-native-paper";
 import { fetchCarDetails, fetchToken } from "../Api/CarApi";
-import { db_store, func } from "../Api/Db";
+import { db_store, db_auth } from "../Api/Db";
 import ListItemCar from "../components/lists/ListItemCar";
 import ListItemAddQueueAction from "../components/lists/ListItemAddQueueAction ";
 import CarAnim from "./CarAnim";
@@ -53,36 +53,8 @@ function VehicleStatus({ navigation }) {
     const vehiclesList = await getVehicleApi.request();
     await setVehicles(vehiclesList.data);
     setSearchVehicles(vehiclesList.data);
-
-    handleGetVehiclesData(vehiclesList.data);
   };
 
-  const handleGetVehiclesData = async (vehiclesList) => {
-    const list = [];
-    await vehiclesList.forEach((vehicle) => {
-      if (vehicle.connected) {
-        (async () => {
-          const token = await fetchToken();
-          const carDetail = await fetchCarDetails(token, vehicle.vin);
-          if (carDetail === undefined) {
-            return list.push(vehicle);
-          } else if (carDetail) {
-            (async () => {
-              (vehicle.batteryState = carDetail.batteryState),
-                (vehicle.chargingStatus = carDetail.chargingStatus),
-                (vehicle.endOfChargeTime = carDetail.endofchargetime),
-                (vehicle.chargingActive = carDetail.chargingActive),
-                (vehicle.soc = carDetail.soc),
-                (vehicle.otherInfo = carDetail);
-              await updateVehicle(vehicle.vehicleId, vehicle);
-              return list.push(vehicle);
-            })();
-          }
-        })();
-      }
-      return list.push(vehicle);
-    });
-  };
 
   const handleDeleteVehicles = async (item) => {
     if (item.queue || item.waitingConfirmation || item.assigned) {
@@ -132,7 +104,7 @@ function VehicleStatus({ navigation }) {
   useEffect(() => {
     const unsubscribeVehicle = db_store
       .collection("vehicle")
-      .where("ownerId", "==", user.userId)
+      .where("ownerId", "==", db_auth.currentUser.uid)
       .onSnapshot((snapshot) => {
         const newList = [];
         snapshot.forEach((doc) => {

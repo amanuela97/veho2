@@ -1,5 +1,8 @@
 import { db_auth, db_store } from "./Db";
-import firebase from "firebase";
+import firebase, { firestore } from "firebase";
+import {Alert} from "react-native";
+import {fetchToken, fetchCarDetails,fetchVin} from '../Api/CarApi';
+import * as SecureStore from 'expo-secure-store';
 
 const requestResult = (hasError, dataReceived) => {
   const status = { error: hasError, data: dataReceived };
@@ -134,41 +137,83 @@ export const updatePassword = async (userInfo) => {
   }
 };
 
-export const addVehicle = async (vehicleInfo) => {
-  try {
-    console.log("request to add Vehicle");
-    const vehicle = await db_store.collection("vehicle").doc();
-
-    const vehicleData = await vehicle.set({
-      vin: vehicleInfo.vin,
-      name: vehicleInfo.vehicleName,
-      vehicleId: vehicle.id,
-      ownerId: vehicleInfo.ownerId,
-      connected: false,
-      otherInfo: "null",
-      assigned: false,
-      batteryState: "null",
-      chargerId: "null",
-      chargerName: "null",
-      chargingActive: false,
-      chargingStatus: "null",
-      endOfChargeTime: "null",
-      position: "0",
-      queue: false,
-      soc: "null",
-      plateNumber: "null",
-      waitingConfirmation: false,
-    });
-    return requestResult(false, vehicleData);
-  } catch (error) {
-    console.log("unable to add vehicle", error.message);
-    return requestResult(true, "unable to add the vehicle");
+export const handleAddCar = async (vehicleInfo, picker) => {
+  // check if token has expired
+  var expires_in = await SecureStore.getItemAsync('expires_in');
+  if(parseInt(Date.now()) >= parseInt(expires_in) || !expires_in ){
+    console.log('token has expired or hasnt been generated, refreshing token');
+    await fetchToken();
   }
+  var token = await SecureStore.getItemAsync('token');
+
+  //fetch vin if liecensePlate was provided
+  var vin = vehicleInfo.vin;
+  if(picker === 'licensePlate'){
+    vin = await fetchVin(vehicleInfo.licensePlate,token);
+  }
+  console.log(vin, token);
+  var carInfo = await fetchCarDetails(token, vin);
+  console.log(carInfo);
+  var user = db_auth.currentUser;
+  if(carInfo == undefined){
+    Alert.alert(
+      `${picker} is invalid`,
+      "Register vehicle anyways?",
+    [
+    {
+    text: "Yes",
+    onPress: () => {addVehicle(vehicleInfo,vin,carInfo,user,false)},
+    },
+    {
+    text: "No",
+    onPress: () => {return},
+    },
+    ],
+     { cancelable: true },
+
+    );
+    return;
+  }
+  addVehicle(vehicleInfo,vin,carInfo,user,true);
+};
+
+
+export const addVehicle = async (vehicleInfo,vin, carInfo,user,connected) => {
+try {
+  console.log("request to add Vehicle");
+  const vehicle = await db_store.collection("vehicle").doc(vin ? vin : vehicleInfo.licensePlate);
+
+  const vehicleData = await vehicle.set({
+    vin: vin ? vin : vehicleInfo.licensePlate,
+    name: vehicleInfo.vehicle,
+    vehicleId: vin ? vin : vehicleInfo.licensePlate,
+    ownerId: user.uid,
+    connected: connected,
+    otherInfo: "null",
+    assigned: false,
+    batteryState: carInfo ? carInfo.batteryState: 'null',
+    chargerId: "null",
+    chargerName: "null",
+    chargingActive: false,
+    chargingStatus: carInfo ? carInfo.chargingStatus: 'null',
+    endOfChargeTime: carInfo ? carInfo.endofchargetime: 'null',
+    position: "0",
+    queue: false,
+    soc: carInfo ? carInfo.soc: 'null',
+    plateNumber: vehicleInfo.licensePlate ? vehicleInfo.licensePlate: 'null',
+    waitingConfirmation: false,
+    timestamp: firestore.FieldValue.serverTimestamp()
+  });
+  return requestResult(false, vehicleData);
+} catch (error) {
+  console.log("unable to add vehicle", error.message);
+  return requestResult(true, "unable to add the vehicle");
+}
 };
 
 export const getVehicles = async () => {
   try {
-    userId = db_auth.currentUser.uid;
+    var userId = db_auth.currentUser.uid;
     const vehicles = [];
     const vehicle = await db_store
       .collection("vehicle")
@@ -213,7 +258,6 @@ export const createChargingQueue = async (vehicle, user) => {
       const data = await db_store.collection("veho").doc(charger.id).update({
         status: "busy",
         currentUserId: user.userId,
-
         currentUsername: user.userName,
         chargingVehicleId: vehicle.vehicleId,
         chargingVehicleName: vehicle.name,

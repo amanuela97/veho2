@@ -4,24 +4,24 @@ import "firebase/auth";
 import "@firebase/functions";
 
 import {
-  API_KEY_B,
-  AUTH_DOMAIN_B,
-  DATABASE_URL_B,
-  PROJECT_ID_B,
-  MESSAGE_SENDER_ID_B,
-  APP_ID_B,
+  API_KEY,
+  AUTH_DOMAIN,
+  DATABASE_URL,
+  PROJECT_ID,
+  MESSAGE_SENDER_ID,
+  APP_ID,
   MEASUREMENT_Id,
-  STORAGE_BUCKET_B,
+  STORAGE_BUCKET,
 } from "@env";
 
 const firebaseConfig = {
-  apiKey: API_KEY_B,
-  authDomain: AUTH_DOMAIN_B,
-  databaseURL: DATABASE_URL_B,
-  projectId: PROJECT_ID_B,
-  storageBucket: STORAGE_BUCKET_B,
-  messagingSenderId: MESSAGE_SENDER_ID_B,
-  appId: APP_ID_B,
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  databaseURL: DATABASE_URL,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGE_SENDER_ID,
+  appId: APP_ID,
 };
 
 // Initialize Firebase

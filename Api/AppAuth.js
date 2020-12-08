@@ -18,7 +18,9 @@ export const registerUser = async (userInfo) => {
           .collection("users")
           .doc(user.uid)
           .set({
+            avatar: '',
             userName: userInfo.name,
+            expoToken:'null',
             userId: user.uid,
             company: userInfo.company,
             email: userInfo.email,

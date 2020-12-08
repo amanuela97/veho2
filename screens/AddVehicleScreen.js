@@ -14,27 +14,32 @@ import Screen from "../components/Screen";
 import { Appbar } from "react-native-paper";
 import { AppAuthContext } from "../context/AppAuthContext";
 import useApi from "../hooks/useApi";
-import { addVehicle } from "../Api/DbRequests";
+import {handleAddCar} from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
+import {Picker} from '@react-native-picker/picker';
 
 const validationSchema = Yup.object().shape({
-  vin: Yup.string().required().label("VIN number"),
-  vehicleName: Yup.string().required().label("vehicle name"),
+  vehicle: Yup.string().required().min(4).label("vehicle"),
+  vin: Yup.string().min(17).max(17).label("vin"),
+  licensePlate: Yup.string().min(7).label("licensePlate")
 });
 
 function AddVehicleScreen({ navigation }) {
   const [loginErrorVisible, setLoginErrorVisible] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [picker, setPicker] = useState('licensePlate');
 
-  const addVehicleApi = useApi(addVehicle);
+  const addVehicleApi = useApi(handleAddCar);
   const { user } = useContext(AppAuthContext);
   const { colors } = useTheme();
 
   const handleSubmit = async (vehicleInfo) => {
-    vehicleInfo.ownerId = user.userId;
-    console.log(vehicleInfo);
-    const result = await addVehicleApi.request(vehicleInfo);
+     // if vin and plate fields are both empty return
+     if(!vehicleInfo.licensePlate && !vehicleInfo.vin){
+      return
+    }
+    const result = await addVehicleApi.request(vehicleInfo,picker);
     if (!result.error) {
       setUploadVisible(true);
     }
@@ -62,23 +67,40 @@ function AddVehicleScreen({ navigation }) {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
+           <FormField
+              autoCorrect={false}
+              icon="car"
+              name="vehicle"
+              placeholder="Vehicle Name"
+        />
+          <Picker
+              selectedValue={picker}
+              mode="dropdown"
+              style={{height: 50, width: '90%'}}
+              onValueChange={(itemValue, itemIndex) => {
+              setPicker(itemValue);
+          }}>
+            <Picker.Item label="licensePlate" value="licensePlate" />
+            <Picker.Item label="vin" value="vin" />
+          </Picker>
+          {picker === 'licensePlate' &&
           <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            name="vin"
-            placeholder="vehicle VIN number"
-          />
+              autoCorrect={false}
+              icon="card"
+              name="licensePlate"
+              placeholder="licensePlate"
+         />}
+          {picker === 'vin' &&
           <FormField
-            autoCapitalize="none"
-            autoCorrect={false}
-            name="vehicleName"
-            placeholder="Name the vehicle"
-          />
+              autoCorrect={false}
+              icon="card"
+              name="vin"
+              placeholder="Vin Number"
+          />}
           <ErrorMessage
             visible={loginErrorVisible}
             error="Invalid login credential"
           />
-
           <SubmitButton title="Add" />
         </Form>
       </View>
@@ -95,8 +117,6 @@ const styles = StyleSheet.create({
   formContainer: {
     marginTop: 30,
     width: "90%",
-    alignItems: "center",
-
     flex: 1,
   },
 });
