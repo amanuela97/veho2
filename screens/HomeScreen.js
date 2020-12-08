@@ -84,7 +84,9 @@ function HomeScreen({ navigation }) {
 
   const setUserData = async () => {
     const userD = await getUserData();
-    setUser(userD.data);
+    await setUser(userD.data);
+    console.log("lll", userD);
+    console.log("the userrrr", user);
   };
 
   useEffect(() => {
