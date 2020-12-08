@@ -19,5 +19,9 @@ export const CustomNativeDarkTheme = {
     tab: "white",
     separator: "#202020",
     chargerList: "#16161d",
+    vehicle: "#333333",
+    vehicleStatus: "black",
+    statusBar: "light",
+    light: false,
   },
 };

@@ -1,9 +1,9 @@
 import { useTheme } from "@react-navigation/native";
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TextInput, Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Appbar } from "react-native-paper";
-import LottieView from "lottie-react-native";
+import { StatusBar } from "expo-status-bar";
 import {
   getVehicles,
   deleteVehicle,
@@ -46,6 +46,7 @@ function VehicleStatus({ navigation }) {
   const { colors } = useTheme();
   const createQueueApi = useApi(createChargingQueue);
   const cancelQueueApi = useApi(cancelQueue);
+  const acceptQueueApi = useApi(updateVehicleSingleInfo);
   useNotifications();
   const handleGetVehicles = async () => {
     console.log("caledd");
@@ -84,34 +85,23 @@ function VehicleStatus({ navigation }) {
   };
 
   const handleDeleteVehicles = async (item) => {
-    const vehiclesList = await deleteVehicleApi.request(item);
-    if (!vehiclesList.error) {
-      setVehicles(vehiclesList.data);
-      setSearchVehicles(vehiclesList.data);
-      setUploadVisible(true);
+    if (item.queue || item.waitingConfirmation || item.assigned) {
+      Alert.alert(
+        "vehicle on Queue ",
+        "please swipe to the right to cancel the queue first",
+
+        { cancelable: true }
+      );
+    } else {
+      const vehiclesList = await deleteVehicleApi.request(item);
+      if (!vehiclesList.error) {
+        setVehicles(vehiclesList.data);
+        setSearchVehicles(vehiclesList.data);
+        setUploadVisible(true);
+      }
     }
   };
 
-  const updatePosition = async (newList) => {
-    console.log("length", vehicles.length);
-    if (vehicles.length !== 0 && vehicles !== undefined) {
-      console.log("here");
-      vehicles.forEach((vehicle) => {
-        if (newList.includes(vehicle.vehicleId)) {
-          const position = newList.indexOf(vehicle.vehicleId) + 1;
-          updateVehicleSingleInfo(
-            vehicle.vehicleId,
-            true,
-            false,
-            false,
-            "null",
-            "null",
-            position
-          );
-        }
-      });
-    }
-  };
   const handleCreateQueue = async (vehicle) => {
     const queue = await createQueueApi.request(vehicle, user);
     if (!queue.error) {
@@ -122,6 +112,20 @@ function VehicleStatus({ navigation }) {
     const queue = await cancelQueueApi.request(vehicle);
     if (!queue.error) {
       setUploadVisible(true);
+    }
+  };
+
+  const handleVehicleOnPress = async (vehicle) => {
+    if (vehicle.waitingConfirmation) {
+      const update = await acceptQueueApi.request(
+        vehicle.vehicleId,
+        false,
+        true,
+        false,
+        vehicle.chargerName,
+        vehicle.chargerId,
+        0
+      );
     }
   };
 
@@ -138,20 +142,8 @@ function VehicleStatus({ navigation }) {
       });
 
     handleGetVehicles();
-    const unsubscribeQueue = db_store
-      .collection("queue")
-      .onSnapshot((snapshot) => {
-        let newList = [];
-        snapshot.forEach((doc) => {
-          newList = doc.data().queue;
-          console.log("dddddd", newList);
-        });
-
-        updatePosition(newList);
-      });
 
     return () => {
-      unsubscribeQueue();
       unsubscribeVehicle();
     };
   }, []);
@@ -168,16 +160,19 @@ function VehicleStatus({ navigation }) {
     getVehicleApi.loading ||
     deleteVehicleApi.loading ||
     createQueueApi.loading ||
+    acceptQueueApi.loading ||
     cancelQueueApi.loading
   ) {
     return <ActivityIndicator visible={true} />;
   }
   return (
-    <View style={styles.container}>
+    <View style={[styles.container]}>
+      {colors.light ? <StatusBar style="dark" /> : <StatusBar style="light" />}
       <Appbar.Header
         style={{
           width: "100%",
           backgroundColor: colors.header,
+          zIndex: 12,
           elevation: 0,
           height: 40,
         }}
@@ -185,7 +180,12 @@ function VehicleStatus({ navigation }) {
         <Appbar.Content title="vehicles" />
       </Appbar.Header>
       <ListItemSeparator />
-      <View style={styles.mainContainer}>
+      <View
+        style={[
+          styles.mainContainer,
+          { backgroundColor: colors.vehicleStatus },
+        ]}
+      >
         <View style={styles.searchContainer}>
           <View>
             <AppText style={[styles.sectionTitle, { color: colors.text }]}>
@@ -225,7 +225,7 @@ function VehicleStatus({ navigation }) {
                   elevation: 1,
                   padding: 6,
                   borderRadius: 20,
-                  backgroundColor: "white",
+                  backgroundColor: colors.vehicleStatus,
                 }}
               >
                 <ListItemCar
@@ -237,7 +237,7 @@ function VehicleStatus({ navigation }) {
                   AndroidIcon={<Icon name="car-electric" />}
                   IconComponent={<CarAnim autoPlayAnim={item.chargingActive} />}
                   backgroundColor={colors.header}
-                  onPress={() => console.log("kk")}
+                  onPress={() => handleVehicleOnPress(item)}
                   renderRightActions={() => (
                     <ListItemDeleteAction
                       onPress={() => handleDeleteVehicles(item)}
@@ -272,7 +272,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     paddingHorizontal: 10,
-    backgroundColor: "#F5F5F5",
   },
   sectionTitle: {
     fontFamily: "OpenSans_600SemiBold",
@@ -280,7 +279,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingLeft: 5,
   },
-  textInputCard: { elevation: 4 },
+  textInputCard: { elevation: 1, borderRadius: 10 },
 
   textInputInner: { flexDirection: "row", width: "100%" },
   iconContainer: {
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
   },
-  textInput: { width: "80%", height: 50 },
+  textInput: { width: "80%", height: 50, borderRadius: 15 },
   searchContainer: {
     width: "100%",
     paddingHorizontal: 10,

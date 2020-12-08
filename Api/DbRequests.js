@@ -349,7 +349,7 @@ export const updateVehicleSingleInfo = async (
   }
 };
 
-export const chargerListener = async (list) => {
+/* export const chargerListener = async (list) => {
   try {
     const vehicle = await db_store
       .collection("queue")
@@ -396,3 +396,4 @@ export const chargerListener = async (list) => {
     console.log(error);
   }
 };
+ */

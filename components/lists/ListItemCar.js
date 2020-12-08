@@ -5,8 +5,10 @@ import {
   Image,
   TouchableHighlight,
   Platform,
+  acceptQueue,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
 import AppText from "../AppText";
@@ -14,6 +16,8 @@ import { useTheme } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
 import { Card } from "react-native-paper";
 import LottieView from "lottie-react-native";
+import CircularProgress from "../CircularProgress";
+import { color } from "react-native-reanimated";
 
 function ListItemCar({
   title,
@@ -28,6 +32,7 @@ function ListItemCar({
   chevron = true,
   backgroundColor = "#fff",
   AndroidIcon,
+  acceptQueue,
 }) {
   const { colors } = useTheme();
 
@@ -63,12 +68,19 @@ function ListItemCar({
         renderRightActions={renderRightActions}
         renderLeftActions={renderLeftActions}
       >
-        <TouchableHighlight underlayColor="white" onPress={onPress}>
-          <View style={{ borderRadius: 20, backgroundColor: "white" }}>
-            <View style={[styles.container, { backgroundColor: "white" }]}>
+        <TouchableHighlight underlayColor={colors.background} onPress={onPress}>
+          <View style={{ borderRadius: 20, backgroundColor: colors.vehicle }}>
+            <View
+              style={[styles.container, { backgroundColor: colors.vehicle }]}
+            >
               {Platform.OS === "ios" ? IconComponent : AndroidIcon}
               {image && <Image style={styles.image} source={image} />}
-              <View style={styles.detailsContainer}>
+              <View
+                style={[
+                  styles.detailsContainer,
+                  { backgroundColor: colors.vehicle },
+                ]}
+              >
                 <AppText
                   style={[styles.title, { color: colors.text }]}
                   numberOfLines={1}
@@ -78,6 +90,8 @@ function ListItemCar({
 
                 <AppText style={[styles.subTitle]}>{vhcStatus}</AppText>
               </View>
+
+              <CircularProgress battery={0} />
             </View>
             {carInfo.assigned && (
               <View style={styles.statusContainerAssigned}>
@@ -91,7 +105,7 @@ function ListItemCar({
               </View>
             )}
             {carInfo.waitingConfirmation && (
-              <View style={styles.statusContainer}>
+              <View style={styles.statusContainer} onPress={acceptQueue}>
                 <View>
                   <LottieView
                     autoPlay
@@ -149,17 +163,22 @@ function ListItemCar({
         renderRightActions={renderRightActions}
         renderLeftActions={renderLeftActions}
       >
-        <TouchableHighlight underlayColor="white" onPress={onPress}>
-          <View style={{ borderRadius: 20 }}>
+        <TouchableHighlight underlayColor={colors.background} onPress={onPress}>
+          <View style={{ borderRadius: 20, backgroundColor: colors.vehicle }}>
             <View
               style={[
                 styles.container,
-                { backgroundColor: "white", borderRadius: 20 },
+                { backgroundColor: colors.vehicle, borderRadius: 20 },
               ]}
             >
               {Platform.OS === "ios" ? IconComponent : AndroidIcon}
               {image && <Image style={styles.image} source={image} />}
-              <View style={styles.detailsContainer}>
+              <View
+                style={[
+                  styles.detailsContainer,
+                  { backgroundColor: colors.vehicle },
+                ]}
+              >
                 <AppText
                   style={[styles.title, { color: colors.text }]}
                   numberOfLines={1}
@@ -170,16 +189,7 @@ function ListItemCar({
                 <AppText style={[styles.subTitleCon]}>{vhcStatus}</AppText>
               </View>
 
-              {connected && (
-                <Card style={styles.queueContainerCard}>
-                  <View style={styles.queueContainer}>
-                    <AppText style={{ fontSize: 14, marginTop: -2 }}>
-                      {carInfo.soc}%
-                    </AppText>
-                    <Feather name="battery-charging" size={14} color="black" />
-                  </View>
-                </Card>
-              )}
+              {connected && <CircularProgress battery={carInfo.soc} />}
             </View>
             {carInfo.assigned && (
               <View style={styles.statusContainerAssigned}>
@@ -193,7 +203,7 @@ function ListItemCar({
               </View>
             )}
             {carInfo.waitingConfirmation && (
-              <View style={styles.statusContainer}>
+              <View style={styles.statusContainer} onPress={acceptQueue}>
                 <View>
                   <LottieView
                     autoPlay

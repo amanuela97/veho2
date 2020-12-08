@@ -17,6 +17,7 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { db_auth, db_store } from "../Api/Db";
 import { AppAuthContext } from "../context/AppAuthContext";
+import { StatusBar } from "expo-status-bar";
 
 import { set } from "react-native-reanimated";
 import {
@@ -78,6 +79,7 @@ function HomeScreen({ navigation }) {
     if (!list.error) {
       setTotalQueue(list.data);
     }
+    console.log("jjjjjjjjjjjjj");
   };
 
   const setUserData = async () => {
@@ -93,17 +95,17 @@ function HomeScreen({ navigation }) {
       snapshot.forEach((doc) => {
         newList.push(doc.data());
       });
-      chargerListener(newList);
+      //chargerListener(newList);
       displayChargers();
     });
     const unsubscribeQueue = db_store
       .collection("queue")
       .onSnapshot((snapshot) => {
+        let newList = [];
         snapshot.forEach((doc) => {
-          const newList = doc.data().queue;
-
-          setTotalQueue(newList);
+          newList = doc.data().queue;
         });
+        setTotalQueue(newList);
       });
     return () => {
       unsubscribe();
@@ -118,71 +120,48 @@ function HomeScreen({ navigation }) {
   }
   return (
     <View style={styles.container}>
-      <Card
-        style={styles.floatingBtn}
-        onPress={() => navigation.navigate("ChargerQueue")}
-      >
-        <TouchableOpacity>
-          <View style={styles.floatingBtnInner}>
-            <MaterialIcons name="queue" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
-      </Card>
+      {colors.light ? <StatusBar style="dark" /> : <StatusBar style="light" />}
 
       <View style={styles.queueContainer}>
-        <View style={styles.innerContainer}>
-          {(totalQueue.length !== 0 || totalQueue !== undefined) && (
-            <TouchableOpacity
-              style={styles.totalQueueTO}
-              onPress={() =>
-                navigation.navigate("AllQueueScreen", {
-                  queue: totalQueue,
-                  user: user,
-                })
-              }
+        <Card
+          style={{
+            width: "94%",
+            height: "80%",
+            backgroundColor: "#112222",
+          }}
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <AppText
+              style={{
+                fontFamily: "OpenSans_700Bold",
+                fontSize: 18,
+                color: "white",
+              }}
             >
-              <View style={styles.totalQueueContainer}>
-                <AppText style={{ color: "white", width: "100%" }}>
-                  {totalQueue.length} users on the Queue
-                </AppText>
-              </View>
-            </TouchableOpacity>
-          )}
-          {chargingCars.length === 0 || chargingCars === undefined ? (
-            <View
-              style={[
-                styles.noQueueContainer,
-                { backgroundColor: colors.header },
-              ]}
-            >
-              <AppText style={{ color: colors.text }}> no car charging</AppText>
-            </View>
-          ) : (
-            <FlatList
-              showsHorizontalScrollIndicator={false}
-              horizontal
-              data={chargingCars}
-              keyExtractor={(list) => list.id}
-              renderItem={({ item }) => (
-                <HomeQueueListCard
-                  onPress={() => {
-                    setQueueModalContent(item);
-                    setModalVisible(true);
-                  }}
-                  cardVisible={queueVisible}
-                  currentCharge={item}
-                />
-              )}
-            />
-          )}
-        </View>
-        {modalVisible && (
-          <QueueModal
-            isModalVisible={modalVisible}
-            setVisible={setModalVisible}
-            item={queueModalContent}
-          />
-        )}
+              current queue status
+            </AppText>
+            {totalQueue?.length > 0 ? (
+              <AppText
+                style={{
+                  fontFamily: "OpenSans_700Bold",
+                  fontSize: 30,
+                  color: "#d6d6d6",
+                }}
+              >
+                {totalQueue.length}
+              </AppText>
+            ) : (
+              <AppText style={{ color: colors.textLight }}>no Queue</AppText>
+            )}
+          </View>
+        </Card>
       </View>
 
       <View style={styles.chargerContainer}>
@@ -255,27 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  floatingBtn: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#00adef",
-    position: "absolute",
 
-    elevation: 4,
-    right: 30,
-    justifyContent: "center",
-    alignItems: "center",
-
-    bottom: 20,
-    zIndex: 2,
-  },
-  floatingBtnInner: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   queueContainer: {
     flex: 1,
     width: "100%",
@@ -296,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   chargerContainer: {
-    flex: 3,
+    flex: 3.5,
     width: "94%",
   },
   chargerSectionHeader: {
@@ -323,7 +282,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     paddingLeft: 5,
   },
-  textInputCard: { elevation: 4 },
+  textInputCard: { elevation: 2, borderRadius: 10 },
 
   textInputInner: { flexDirection: "row", width: "100%" },
   ll: {

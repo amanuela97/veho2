@@ -25,7 +25,7 @@ function ListItemAddQueueAction({
       {(vehicleQueue || assigned || confirmation) && (
         <TouchableWithoutFeedback onPress={onPressCancel}>
           <View style={styles.containerD}>
-            <MaterialIcons name="delete-sweep" size={35} color="white" />
+            <MaterialIcons name="cancel" size={35} color="white" />
             <AppText style={{ fontSize: 10, color: "white" }}>Queue</AppText>
           </View>
         </TouchableWithoutFeedback>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   containerD: {
-    backgroundColor: "tomato",
+    backgroundColor: "black",
     width: 70,
     justifyContent: "center",
     alignItems: "center",

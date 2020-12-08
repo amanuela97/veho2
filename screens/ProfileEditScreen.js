@@ -20,6 +20,7 @@ function ProfileEditScreen({ route, navigation }) {
   const [userInfo, setUserInfo] = useState("");
   const [error, setError] = useState("");
   const [uploadVisible, setUploadVisible] = useState(false);
+  const [emptyContent, setEmptyContent] = useState(false);
   const { userName, phoneNumber, password } = route.params;
 
   const { user, setUser } = useContext(AppAuthContext);
@@ -30,32 +31,50 @@ function ProfileEditScreen({ route, navigation }) {
   const { colors } = useTheme();
 
   const handleUserNameChange = async () => {
-    const result = await updateUsernameApi.request(userInfo, user.userId);
-    if (!result.error) {
-      setUser(result.data);
-      setUploadVisible(true);
+    if (userInfo?.length < 1 || userInfo === undefined) {
+      setEmptyContent(true);
+
+      setError("empty field");
     } else {
-      setError(result.data);
+      const result = await updateUsernameApi.request(userInfo, user.userId);
+      if (!result.error) {
+        setUser(result.data);
+        setUploadVisible(true);
+      } else {
+        setError(result.data);
+      }
     }
   };
 
   const handlePhoneNumberChange = async () => {
-    const result = await updatePhoneNumberApi.request(userInfo, user.userId);
-    if (!result.error) {
-      setUser(result.data);
-      setUploadVisible(true);
+    if (userInfo?.length < 1 || userInfo === undefined) {
+      setEmptyContent(true);
+
+      setError("empty field");
     } else {
-      setError(result.data);
+      const result = await updatePhoneNumberApi.request(userInfo, user.userId);
+      if (!result.error) {
+        setUser(result.data);
+        setUploadVisible(true);
+      } else {
+        setError(result.data);
+      }
     }
   };
 
   const handlePasswordChange = async () => {
-    const result = await updatePasswordApi.request(userInfo);
-    if (!result.error) {
-      // setUser(result.data);
-      setUploadVisible(true);
+    if (userInfo?.length < 1 || userInfo === undefined) {
+      setEmptyContent(true);
+
+      setError("empty field");
     } else {
-      setError(result.data);
+      const result = await updatePasswordApi.request(userInfo);
+      if (!result.error) {
+        // setUser(result.data);
+        setUploadVisible(true);
+      } else {
+        setError(result.data);
+      }
     }
   };
 
@@ -76,7 +95,8 @@ function ProfileEditScreen({ route, navigation }) {
           visible={
             updatePhoneNumberApi.error ||
             updateUsernameApi.error ||
-            updatePasswordApi.error
+            updatePasswordApi.error ||
+            emptyContent
           }
           error={error}
           style={styles.error}

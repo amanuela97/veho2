@@ -16,9 +16,11 @@ import { SimpleLineIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { AppContext } from "../context/AppThemeContext";
 import { useTheme } from "@react-navigation/native";
+import { AuthContextMain } from "../context/AppAuthContextMain";
 
 export function DrawerContent(props) {
   const { isDarkTheme, toggleTheme } = useContext(AppContext);
+  const { logout } = useContext(AuthContextMain);
   const { colors } = useTheme();
   return (
     <View style={{ flex: 1, backgroundColor: colors.drawer }}>
@@ -100,7 +102,7 @@ export function DrawerContent(props) {
           )}
           label="Sign Out"
           onPress={() => {
-            signOut();
+            logout();
           }}
         />
       </Drawer.Section>

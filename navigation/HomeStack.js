@@ -49,25 +49,6 @@ const HomeStack = ({ navigation }) => {
               />
             </View>
           ),
-
-          headerRight: () => (
-            <View
-              style={{
-                width: "100%",
-                paddingRight: "20%",
-              }}
-            >
-              <Avatar.Image
-                style={{
-                  borderColor: "black",
-                  alignSelf: "flex-end",
-                  borderWidth: 0,
-                }}
-                size={30}
-                source={require("../assets/profileP.jpg")}
-              />
-            </View>
-          ),
         }}
       />
       <Stack.Screen name="Charger" component={ChargerDetailScreen} />
