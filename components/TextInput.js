@@ -4,10 +4,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import defaultStyles from "../config/styles";
 import { Divider } from "react-native-paper";
+import { useTheme } from "@react-navigation/native";
 
 function AppTextInput({ icon, width = "100%", ...otherProps }) {
+  const { colors } = useTheme();
   return (
-    <View style={[styles.container, { width }]}>
+    <View style={[styles.container, { width, backgroundColor: colors.header }]}>
       {icon && (
         <MaterialCommunityIcons
           name={icon}
@@ -18,8 +20,9 @@ function AppTextInput({ icon, width = "100%", ...otherProps }) {
       )}
       <Divider />
       <TextInput
-        placeholderTextColor={defaultStyles.colors.medium}
-        style={styles.text}
+        placeholderTextColor={colors.textLight}
+        color={colors.text}
+        style={{ width: "100%" }}
         {...otherProps}
       />
     </View>

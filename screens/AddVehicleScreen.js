@@ -11,35 +11,35 @@ import {
 } from "../components/forms";
 import { useTheme } from "@react-navigation/native";
 import Screen from "../components/Screen";
-import { Appbar } from "react-native-paper";
+import { Appbar, RadioButton, Text } from "react-native-paper";
 import { AppAuthContext } from "../context/AppAuthContext";
 import useApi from "../hooks/useApi";
-import {handleAddCar} from "../Api/DbRequests";
+import { handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 
 const validationSchema = Yup.object().shape({
   vehicle: Yup.string().required().min(4).label("vehicle"),
   vin: Yup.string().min(17).max(17).label("vin"),
-  licensePlate: Yup.string().min(7).label("licensePlate")
+  licensePlate: Yup.string().min(7).label("licensePlate"),
 });
 
 function AddVehicleScreen({ navigation }) {
   const [loginErrorVisible, setLoginErrorVisible] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const [picker, setPicker] = useState('licensePlate');
-
+  const [picker, setPicker] = useState("licensePlate");
+  const [value, setValue] = React.useState("first");
   const addVehicleApi = useApi(handleAddCar);
   const { user } = useContext(AppAuthContext);
   const { colors } = useTheme();
 
   const handleSubmit = async (vehicleInfo) => {
-     // if vin and plate fields are both empty return
-     if(!vehicleInfo.licensePlate && !vehicleInfo.vin){
-      return
+    // if vin and plate fields are both empty return
+    if (!vehicleInfo.licensePlate && !vehicleInfo.vin) {
+      return;
     }
-    const result = await addVehicleApi.request(vehicleInfo,picker);
+    const result = await addVehicleApi.request(vehicleInfo, picker);
     if (!result.error) {
       setUploadVisible(true);
     }
@@ -67,40 +67,70 @@ function AddVehicleScreen({ navigation }) {
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-           <FormField
-              autoCorrect={false}
-              icon="car"
-              name="vehicle"
-              placeholder="Vehicle Name"
-        />
-          <Picker
-              selectedValue={picker}
-              mode="dropdown"
-              style={{height: 50, width: '90%'}}
-              onValueChange={(itemValue, itemIndex) => {
-              setPicker(itemValue);
-          }}>
-            <Picker.Item label="licensePlate" value="licensePlate" />
-            <Picker.Item label="vin" value="vin" />
-          </Picker>
-          {picker === 'licensePlate' &&
           <FormField
+            autoCorrect={false}
+            icon="car"
+            style={{ width: "80%" }}
+            name="vehicle"
+            placeholder="Vehicle Name"
+          />
+
+          <Picker
+            selectedValue={picker}
+            style={{ backgroundColor: colors.background }}
+            itemStyle={{ backgroundColor: colors.header }}
+            onValueChange={(itemValue, itemIndex) => {
+              setPicker(itemValue);
+            }}
+          >
+            <Picker.Item
+              label="licensePlate"
+              value="licensePlate"
+              color={colors.text}
+            />
+            <Picker.Item label="vin" value="vin" color={colors.text} />
+          </Picker>
+          {picker === "licensePlate" && (
+            <FormField
               autoCorrect={false}
               icon="card"
               name="licensePlate"
+              style={{ width: "80%" }}
               placeholder="licensePlate"
-         />}
-          {picker === 'vin' &&
-          <FormField
+            />
+          )}
+          {picker === "vin" && (
+            <FormField
               autoCorrect={false}
               icon="card"
               name="vin"
               placeholder="Vin Number"
-          />}
+            />
+          )}
           <ErrorMessage
             visible={loginErrorVisible}
             error="Invalid login credential"
           />
+          {/*  <RadioButton.Group
+            onValueChange={(newValue) => setValue(newValue)}
+            value={value}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <Text>First</Text>
+              <RadioButton value="first" />
+            </View>
+            <View>
+              <Text>Second</Text>
+              <RadioButton value="second" />
+            </View>
+          </RadioButton.Group> */}
           <SubmitButton title="Add" />
         </Form>
       </View>

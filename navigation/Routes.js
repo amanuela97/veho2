@@ -22,7 +22,7 @@ import { AppAuthContext } from "../context/AppAuthContext";
 const Routes = () => {
   const { userAuth, setUserAuth } = useContext(AuthContextMain);
   const [initializing, setInitializing] = useState(true);
-  const [isDarkTheme, setDarkTheme] = useState(false);
+  const [isDarkTheme, setDarkTheme] = useState(true);
   const [user, setUser] = useState({});
   let loadFont = fonts();
   const toggleTheme = useCallback(() => {
