@@ -66,21 +66,7 @@ function ProfileScreen({ navigation }) {
 
   //ask for camera/roll permission
   useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const {
-          status,
-        } = await ImagePicker.requestCameraRollPermissionsAsync();
-        const { status2 } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted" && status2 !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!");
-        }
-      }
-      if (image == null) {
-        //fetch image inside here
-      }
-      setUploading(false);
-    })();
+  
   }, []);
 
   //select the image

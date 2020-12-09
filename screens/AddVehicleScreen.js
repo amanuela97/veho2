@@ -17,7 +17,6 @@ import useApi from "../hooks/useApi";
 import { handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
-import { Picker } from "@react-native-picker/picker";
 
 const validationSchema = Yup.object().shape({
   vehicle: Yup.string().required().min(4).label("vehicle"),
@@ -74,26 +73,19 @@ function AddVehicleScreen({ navigation }) {
             name="vehicle"
             placeholder="Vehicle Name"
           />
-          <View style={{ overflow: "hidden", backgroundColor: "red" }}>
-            <Picker
-              selectedValue={picker}
-              style={{
-                backgroundColor: "gray",
-              }}
-              itemStyle={{ backgroundColor: colors.header }}
-              onValueChange={(itemValue, itemIndex) => {
-                setPicker(itemValue);
-              }}
-            >
-              <Picker.Item
-                label="licensePlate"
-                value="licensePlate"
-                color="red"
-              />
-              <Picker.Item label="vin" value="vin" color="red" />
-            </Picker>
-          </View>
-
+          <RadioButton.Group
+            onValueChange={(newValue) => setPicker(newValue)}
+            value={picker}
+          >
+            <View style={styles.RadioButtonStyle}>
+              <Text>licensePlate</Text>
+              <RadioButton value="licensePlate" />
+            </View>
+            <View style={styles.RadioButtonStyle}>
+              <Text>vin</Text>
+              <RadioButton value="vin" />
+            </View>
+          </RadioButton.Group>
           {picker === "licensePlate" && (
             <FormField
               autoCorrect={false}
@@ -115,26 +107,6 @@ function AddVehicleScreen({ navigation }) {
             visible={loginErrorVisible}
             error="Invalid login credential"
           />
-          {/*  <RadioButton.Group
-            onValueChange={(newValue) => setValue(newValue)}
-            value={value}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              <Text>First</Text>
-              <RadioButton value="first" />
-            </View>
-            <View>
-              <Text>Second</Text>
-              <RadioButton value="second" />
-            </View>
-          </RadioButton.Group> */}
           <SubmitButton title="Add" />
         </Form>
       </View>
@@ -152,6 +124,11 @@ const styles = StyleSheet.create({
     marginTop: 30,
     width: "90%",
     flex: 1,
+  },
+  RadioButtonStyle: {
+    flexDirection: "row-reverse",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
 });
 
