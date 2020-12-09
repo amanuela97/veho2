@@ -196,11 +196,6 @@ function HomeScreen({ navigation }) {
             <HomeChargerList
               item={item}
               onPress={() => {
-                if (item.status === "free") {
-                  navigation.navigate("Charger", {
-                    charger: item,
-                  });
-                }
                 if (item.status === "busy") {
                   Alert.alert(
                     "",
