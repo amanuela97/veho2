@@ -74,10 +74,12 @@ function AddVehicleScreen({ navigation }) {
             name="vehicle"
             placeholder="Vehicle Name"
           />
-          <View style={{ marginVertical: 10, height: 150, overflow: "hidden" }}>
+          <View style={{ overflow: "hidden", backgroundColor: "red" }}>
             <Picker
               selectedValue={picker}
-              style={{ backgroundColor: colors.background }}
+              style={{
+                backgroundColor: "gray",
+              }}
               itemStyle={{ backgroundColor: colors.header }}
               onValueChange={(itemValue, itemIndex) => {
                 setPicker(itemValue);
