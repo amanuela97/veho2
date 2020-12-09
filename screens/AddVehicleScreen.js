@@ -74,22 +74,24 @@ function AddVehicleScreen({ navigation }) {
             name="vehicle"
             placeholder="Vehicle Name"
           />
+          <View style={{ marginVertical: 10, height: 150, overflow: "hidden" }}>
+            <Picker
+              selectedValue={picker}
+              style={{ backgroundColor: colors.background }}
+              itemStyle={{ backgroundColor: colors.header }}
+              onValueChange={(itemValue, itemIndex) => {
+                setPicker(itemValue);
+              }}
+            >
+              <Picker.Item
+                label="licensePlate"
+                value="licensePlate"
+                color="red"
+              />
+              <Picker.Item label="vin" value="vin" color="red" />
+            </Picker>
+          </View>
 
-          <Picker
-            selectedValue={picker}
-            style={{ backgroundColor: colors.background }}
-            itemStyle={{ backgroundColor: colors.header }}
-            onValueChange={(itemValue, itemIndex) => {
-              setPicker(itemValue);
-            }}
-          >
-            <Picker.Item
-              label="licensePlate"
-              value="licensePlate"
-              color={colors.text}
-            />
-            <Picker.Item label="vin" value="vin" color={colors.text} />
-          </Picker>
           {picker === "licensePlate" && (
             <FormField
               autoCorrect={false}

@@ -26,8 +26,6 @@ const MainNavigator = () => {
         component={TabNavigator}
       />
       <Drawer.Screen name="Vehicle" component={AddVehicleScreen} />
-      <Drawer.Screen name="Setting" component={SettingScreen} />
-      <Drawer.Screen name="Feedback" component={FeedbackScreen} />
     </Drawer.Navigator>
   );
 };

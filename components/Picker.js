@@ -14,6 +14,7 @@ import defaultStyles from "../config/styles";
 import PickerItem from "./PickerItem";
 import Screen from "./Screen";
 import { ListItemSeparator } from "./lists";
+import { useTheme } from "@react-navigation/native";
 
 function AppPicker({
   icon,
@@ -27,6 +28,7 @@ function AppPicker({
   backgroundColor = "white",
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const { colors } = useTheme();
 
   return (
     <>
@@ -53,27 +55,33 @@ function AppPicker({
           />
         </View>
       </TouchableWithoutFeedback>
-      <Modal visible={modalVisible} animationType="slide">
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        style={{ backgroundColor: colors.header }}
+      >
         <Screen>
-          <Button title="Close" onPress={() => setModalVisible(false)} />
-          <FlatList
-            data={items}
-            keyExtractor={(item) =>
-              item.vehicleId ? item.vehicleId : item.itemName
-            }
-            numColumns={numberOfColumns}
-            renderItem={({ item }) => (
-              <PickerItemComponent
-                item={item}
-                label={item.label}
-                onPress={() => {
-                  setModalVisible(false);
-                  onSelectItem(item);
-                }}
-              />
-            )}
-            ItemSeparatorComponent={ListItemSeparator}
-          />
+          <View style={{ backgroundColor: colors.header, flex: 1 }}>
+            <Button title="Close" onPress={() => setModalVisible(false)} />
+            <FlatList
+              data={items}
+              keyExtractor={(item) =>
+                item.vehicleId ? item.vehicleId : item.itemName
+              }
+              numColumns={numberOfColumns}
+              renderItem={({ item }) => (
+                <PickerItemComponent
+                  item={item}
+                  label={item.label}
+                  onPress={() => {
+                    setModalVisible(false);
+                    onSelectItem(item);
+                  }}
+                />
+              )}
+              ItemSeparatorComponent={ListItemSeparator}
+            />
+          </View>
         </Screen>
       </Modal>
     </>
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   placeholder: {
-    color: defaultStyles.colors.medium,
+    color: "white",
     flex: 1,
   },
   text: {

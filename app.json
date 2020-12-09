@@ -2,6 +2,7 @@
   "expo": {
     "name": "vehoGo charger",
     "slug": "test-app",
+    "platforms":["ios","android","web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logov.png",

@@ -22,6 +22,7 @@ import { registerUser } from "../Api/AppAuth";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { AuthContextMain } from "../context/AppAuthContextMain";
+import { useTheme } from "@react-navigation/native";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -40,7 +41,7 @@ function SignupScreen() {
   const [error, setError] = useState();
   const { register } = useContext(AuthContextMain);
   const registerApi = useApi(register);
-
+  const { colors } = useTheme();
   const handlePickerSelection = (item) => {
     setPickedItem(item.itemName);
   };
@@ -82,6 +83,7 @@ function SignupScreen() {
               numberOfColumns={1}
               PickerItemComponent={PickerItem}
               onSelectItem={handlePickerSelection}
+              backgroundColor={colors.header}
               placeholder={
                 pickedItem.length < 1 ? " Select Company" : pickedItem
               }

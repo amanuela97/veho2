@@ -57,16 +57,9 @@ function HomeScreen({ navigation }) {
     const chargers = await chargerListApi.request();
     await setChargers(chargers.data);
     setChargerSearch(chargers.data);
-    //  handleChargingCars(chargers.data);
+    console.log(chargers.data);
   };
 
-  /*  const handleChargingCars = async (chargers) => {
-    const cars = await chargers.filter((item) => {
-      const currentUsr = item.currentUser;
-      return currentUsr.currentUserId === user.userId;
-    });
-    await setChargingCars(cars);
-  }; */
   const handleSearch = (text) => {
     const userInput = text.toLowerCase();
     const newList = chargerSearch.filter((charger) =>
@@ -212,6 +205,18 @@ function HomeScreen({ navigation }) {
                   Alert.alert(
                     "",
                     "this charger is currently busy, please select a free charger",
+                    [
+                      {
+                        text: "ok ",
+                        onPress: () => {},
+                      },
+                    ],
+                    { cancelable: true }
+                  );
+                } else {
+                  Alert.alert(
+                    "",
+                    "please create queue on the vehicle screen",
                     [
                       {
                         text: "ok ",

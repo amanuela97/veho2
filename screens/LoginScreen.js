@@ -104,6 +104,7 @@ function LoginScreen({ navigation }) {
 
           <SubmitButton title="Login" />
           <AppButton
+            color="#3d348b"
             title="signup"
             onPress={() => navigation.navigate("Signup")}
           />
@@ -119,10 +120,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.text,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     alignSelf: "center",
-    marginTop: 50,
+    marginTop: 40,
     marginBottom: 20,
   },
   header: {

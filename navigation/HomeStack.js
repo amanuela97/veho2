@@ -40,6 +40,7 @@ const HomeStack = ({ navigation }) => {
                 width: "100%",
                 paddingLeft: "20%",
               }}
+              onPress={() => navigation.openDrawer()}
             >
               <SimpleLineIcons
                 name="grid"
@@ -52,9 +53,6 @@ const HomeStack = ({ navigation }) => {
         }}
       />
       <Stack.Screen name="Charger" component={ChargerDetailScreen} />
-      <Stack.Screen name="Comment" component={CommentScreen} />
-      <Stack.Screen name="ChargerQueue" component={CreateQueueScreen} />
-      <Stack.Screen name="AllQueueScreen" component={QueueScreen} />
     </Stack.Navigator>
   );
 };

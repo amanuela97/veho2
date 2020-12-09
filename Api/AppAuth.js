@@ -18,9 +18,9 @@ export const registerUser = async (userInfo) => {
           .collection("users")
           .doc(user.uid)
           .set({
-            avatar: '',
+            avatar: "",
             userName: userInfo.name,
-            expoToken:'null',
+            expoToken: "null",
             userId: user.uid,
             company: userInfo.company,
             email: userInfo.email,
@@ -49,6 +49,17 @@ export const loginUser = async (userInfo) => {
     return requestResult(false, "user");
   } catch (error) {
     return requestResult(true, error.message);
+  }
+};
+
+export const forgerPassword = async (email) => {
+  try {
+    const mm = await db_auth.sendPasswordResetEmail(email);
+    console.log(mm);
+    return requestResult(false, "mee");
+  } catch (e) {
+    console.log("eee", e);
+    return requestResult(true, "no account with this email address");
   }
 };
 

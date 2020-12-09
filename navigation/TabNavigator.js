@@ -8,6 +8,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import ProfileScreen from "../screens/ProfileScreen";
 import ProfileStackNav from "./ProfileStackNav";
 import VehicleStatus from "../screens/VehicleStatus";
+
 const Tab = createMaterialBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -23,9 +24,9 @@ const TabNavigator = () => {
         name="Booking"
         component={HomeStack}
         options={{
-          tabBarLabel: "explore",
+          tabBarLabel: "chargers",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons name="explore" size={26} color={color} />
+            <FontAwesome5 name="charging-station" size={22} color={color} />
           ),
         }}
       />

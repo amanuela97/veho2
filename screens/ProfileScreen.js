@@ -136,59 +136,12 @@ function ProfileScreen({ navigation }) {
 
   return (
     <Screen style={styles.screen}>
-      <ListItemz
-        thumbnail
-        style={{ backgroundColor: colors.header, marginLeft: 5, marginTop: 10 }}
-      >
-        <Left>
-          <TouchableOpacity
-            onPress={() => {
-              Alert.alert(
-                "Avatar",
-                "set your avatar",
-                [
-                  {
-                    text: "Take a photo",
-                    onPress: () => {
-                      takePhoto();
-                    },
-                  },
-                  {
-                    text: "Select from gallery",
-                    onPress: () => {
-                      pickImage();
-                    },
-                  },
-                ],
-                { cancelable: true }
-              );
-            }}
-          >
-            {image && !uploading && (
-              <Thumbnail circle source={{ uri: image }} />
-            )}
-            {!uploading && image == null && (
-              <Thumbnail circle source={require("../assets/profileP.jpg")} />
-            )}
-            {uploading && (
-              <View>
-                <ActivityIndicator
-                  color="black"
-                  style={{ marginTop: "35%" }}
-                  stylleanimating
-                  size="large"
-                />
-              </View>
-            )}
-          </TouchableOpacity>
-        </Left>
-        <Body>
-          <Text>Insert text here.....</Text>
-          <Text note numberOfLines={1}>
-            {user.email}
-          </Text>
-        </Body>
-      </ListItemz>
+      <ListItem
+        title={user?.userName}
+        subTitle={user?.email}
+        chevron={false}
+        backgroundColor={colors.header}
+      />
       <View style={styles.mini}>
         <ListItem
           title="username"
@@ -288,6 +241,7 @@ function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 24,
+    marginBottom: 10,
   },
   mini: {
     marginVertical: 20,

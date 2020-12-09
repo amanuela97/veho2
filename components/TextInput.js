@@ -21,6 +21,7 @@ function AppTextInput({ icon, width = "100%", ...otherProps }) {
       <Divider />
       <TextInput
         placeholderTextColor={colors.textLight}
+        maxLength={30}
         color={colors.text}
         style={{ width: "100%" }}
         {...otherProps}

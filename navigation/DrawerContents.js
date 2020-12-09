@@ -55,29 +55,6 @@ export function DrawerContent(props) {
                 props.navigation.navigate("Vehicle");
               }}
             />
-
-            <DrawerItem
-              icon={({ color, size }) => (
-                <Octicons name="settings" size={24} color={colors.text} />
-              )}
-              label="Settings"
-              onPress={() => {
-                props.navigation.navigate("Setting");
-              }}
-            />
-            <DrawerItem
-              icon={({ color, size }) => (
-                <FontAwesome5
-                  name="paper-plane"
-                  size={24}
-                  color={colors.text}
-                />
-              )}
-              label="Feedback"
-              onPress={() => {
-                props.navigation.navigate("Feedback");
-              }}
-            />
           </Drawer.Section>
           <Drawer.Section title="Preferences">
             <TouchableRipple
