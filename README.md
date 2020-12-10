@@ -7,7 +7,7 @@
 
 Run in your terminal
 
-1 -`git clone https://github.com/Ruon1s/Veho.git`
+1 -`https://github.com/amanuela97/veho2.git`
 
 open the folder to the project and in the terminal
 
