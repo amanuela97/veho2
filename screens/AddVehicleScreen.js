@@ -17,12 +17,9 @@ import useApi from "../hooks/useApi";
 import { addVehicle, handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
-<<<<<<< HEAD
 import { Picker } from "@react-native-picker/picker";
 import i18n from 'i18n-js';
-=======
 import { db_auth } from "../Api/Db";
->>>>>>> f76e62f835069811be6baafbebee3d3f41bd708e
 
 const validationSchema = Yup.object().shape({
   vehicle: Yup.string().required().min(4).label("vehicle"),
@@ -123,26 +120,6 @@ function AddVehicleScreen({ navigation }) {
             name="vehicle"
             placeholder={i18n.t("vehicleName")}
           />
-<<<<<<< HEAD
-          <View style={{ marginVertical: 10, height: 150, overflow: "hidden" }}>
-            <Picker
-              selectedValue={picker}
-              style={{ backgroundColor: colors.background }}
-              itemStyle={{ backgroundColor: colors.header }}
-              onValueChange={(itemValue, itemIndex) => {
-                setPicker(itemValue);
-              }}
-            >
-              <Picker.Item
-                label={i18n.t("licensePlateNumber")}
-                value="licensePlate"
-                color="red"
-              />
-              <Picker.Item label="vin" value="vin" color="red" />
-            </Picker>
-          </View>
-
-=======
           <RadioButton.Group
             onValueChange={(newValue) => setPicker(newValue)}
             value={picker}
@@ -156,7 +133,6 @@ function AddVehicleScreen({ navigation }) {
               <RadioButton value="vin" />
             </View>
           </RadioButton.Group>
->>>>>>> f76e62f835069811be6baafbebee3d3f41bd708e
           {picker === "licensePlate" && (
             <FormField
               autoCorrect={false}
@@ -178,7 +154,6 @@ function AddVehicleScreen({ navigation }) {
             visible={loginErrorVisible}
             error="Invalid login credential"
           />
-<<<<<<< HEAD
           {/*  <RadioButton.Group
             onValueChange={(newValue) => setValue(newValue)}
             value={value}
@@ -200,9 +175,6 @@ function AddVehicleScreen({ navigation }) {
             </View>
           </RadioButton.Group> */}
           <SubmitButton title={i18n.t("add")} />
-=======
-          <SubmitButton title="Add" />
->>>>>>> f76e62f835069811be6baafbebee3d3f41bd708e
         </Form>
       </View>
     </View>
