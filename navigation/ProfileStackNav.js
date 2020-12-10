@@ -22,7 +22,7 @@ const ProfileStackNav = ({ navigation }) => {
       }}
     >
       <Stack.Screen name={i18n.t("Profile")} component={ProfileScreen} />
-      <Stack.Screen name="EditProfile" component={ProfileEditScreen} />
+      <Stack.Screen name="EditProfile" options={{ headerTitle :i18n.t("EditProfile")}} component={ProfileEditScreen} />
     </Stack.Navigator>
   );
 };

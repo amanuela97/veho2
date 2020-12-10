@@ -27,14 +27,11 @@ import { Header } from "@react-navigation/stack";
 import { useTheme } from "@react-navigation/native";
 import { AppAuthContext } from "../context/AppAuthContext";
 import { db_auth, db_store } from "../Api/Db";
-<<<<<<< HEAD
-import i18n from 'i18n-js';
-=======
 import { deleteAccount } from "../Api/AppAuth";
 import useApi from "../hooks/useApi";
 import { result } from "validate.js";
 import UploadScreen from "./UploadScreen";
->>>>>>> f76e62f835069811be6baafbebee3d3f41bd708e
+import i18n from 'i18n-js';
 
 let newWidth = 100;
 let newHeight = 100;

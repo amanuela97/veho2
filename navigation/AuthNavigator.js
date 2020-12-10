@@ -18,8 +18,8 @@ const AuthNavigator = () => (
       component={OnboardingScreen}
       options={{ headerShown: false }}
     />
-    <Stack.Screen name="Login" component={LoginScreen} />
-    <Stack.Screen name="Signup" component={SignupScreen} />
+    <Stack.Screen name="Login" options={{ headerTitle :i18n.t("Login")}} component={LoginScreen} />
+    <Stack.Screen name="Signup" options={{ headerTitle :i18n.t("signup")}} component={SignupScreen} />
   </Stack.Navigator>
 );
 

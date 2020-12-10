@@ -61,11 +61,11 @@ function AddVehicleScreen({ navigation }) {
     }
     if (!result.error && vehicleDa.catInfo === undefined) {
       Alert.alert(
-        `${picker} is invalid`,
-        "Register vehicle anyways?",
+        `${picker==="licensePlate"? i18n.t("licensePlateNumber"): i18n.t("vinNumber")} ${i18n.t("isValid")}`,
+        i18n.t("registerAnyway"),
         [
           {
-            text: "Yes",
+            text: i18n.t("Yes"),
             onPress: async () => {
               const vehicleD = await addVehicleDataApi.request(
                 vehicleInfo,
@@ -79,7 +79,7 @@ function AddVehicleScreen({ navigation }) {
             },
           },
           {
-            text: "No",
+            text: i18n.t("No"),
             onPress: () => {
               return;
             },
@@ -125,11 +125,11 @@ function AddVehicleScreen({ navigation }) {
             value={picker}
           >
             <View style={styles.RadioButtonStyle}>
-              <Text>licensePlate</Text>
+              <Text>{i18n.t("licensePlateNumber")}</Text>
               <RadioButton value="licensePlate" />
             </View>
             <View style={styles.RadioButtonStyle}>
-              <Text>vin</Text>
+              <Text>{i18n.t("vinNumber")}</Text>
               <RadioButton value="vin" />
             </View>
           </RadioButton.Group>
