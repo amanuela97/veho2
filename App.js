@@ -1,22 +1,7 @@
-import React from 'react';
-import {StyleSheet, Text, View } from 'react-native';
+import React from "react";
 
+import Providers from "./navigation";
 
-const App = () => {
-
-
-
-  return (
-    <View style={styles.screen}>
-      <Text>Hello</Text>
-    </View>
-  );
+export default function App() {
+  return <Providers />;
 }
-
-const styles = StyleSheet.create({
-  screen:{
-    padding: 50    
-  }
-});
-
-export default App;
