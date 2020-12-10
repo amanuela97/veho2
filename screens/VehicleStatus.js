@@ -33,7 +33,7 @@ import CarAnim from "./CarAnim";
 import useNotifications from "../hooks/useNotifications";
 import AppButton from "../components/AppButton";
 import { result } from "validate.js";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 
 function VehicleStatus({ navigation }) {
   const [error, setError] = useState();
@@ -162,7 +162,7 @@ function VehicleStatus({ navigation }) {
         <View style={styles.searchContainer}>
           <View>
             <AppText style={[styles.sectionTitle, { color: colors.text }]}>
-            {i18n.t("vehiclesCollection")}
+              {i18n.t("vehiclesCollection")}
             </AppText>
           </View>
           <Card style={styles.textInputCard}>
@@ -230,6 +230,15 @@ function VehicleStatus({ navigation }) {
             )}
           />
         )}
+
+        {vehicles === undefined ||
+          (vehicles.length == 0 && (
+            <View style={{ paddingHorizontal: 10 }}>
+              <AppText style={{ color: colors.textLight, fontSize: 12 }}>
+                {i18n.t("userGuid")}
+              </AppText>
+            </View>
+          ))}
       </View>
     </View>
   );

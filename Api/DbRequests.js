@@ -3,7 +3,7 @@ import firebase, { firestore } from "firebase";
 import { Alert } from "react-native";
 import { fetchToken, fetchCarDetails, fetchVin } from "../Api/CarApi";
 import * as SecureStore from "expo-secure-store";
-import i18n from 'i18n-js';
+
 const requestResult = (hasError, dataReceived) => {
   const status = { error: hasError, data: dataReceived };
   return status;
@@ -165,18 +165,18 @@ export const handleAddCar = async (vehicleInfo, picker) => {
   }
   /*  if (carInfo === undefined) {
     Alert.alert(
-      `${picker} ${i18n.t("isValid")}`,
-      i18n.t("registerAnyway"),
+      `${picker} is invalid`,
+      "Register vehicle anyways?",
       [
         {
-          text: i18n.t("Yes"),
+          text: "Yes",
           onPress: () => {
          const result = await  addVehicle(vehicleInfo, vin, carInfo, user, false);
          return result
           },
         },
         {
-          text: i18n.t("No"),
+          text: "No",
           onPress: () => {
             return;
           },
