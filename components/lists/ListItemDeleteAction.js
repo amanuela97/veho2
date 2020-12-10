@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import colors from "../../config/colors";
 import AppText from "../AppText";
+import i18n from 'i18n-js';
 
 function ListItemDeleteAction({ onPress }) {
   return (
@@ -14,7 +15,7 @@ function ListItemDeleteAction({ onPress }) {
           size={35}
           color={colors.white}
         />
-        <AppText style={{ fontSize: 10, color: "white" }}>Vehicle</AppText>
+        <AppText style={{ fontSize: 10, color: "white" }}>{i18n.t("vehicles")}</AppText>
       </View>
     </TouchableWithoutFeedback>
   );

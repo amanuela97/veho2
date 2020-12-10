@@ -19,6 +19,7 @@ import colors from "../config/colors";
 import { useTheme } from "@react-navigation/native";
 import UploadScreen from "./UploadScreen";
 import { Card } from "native-base";
+import i18n from 'i18n-js';
 
 function ChargerDetailScreen({ route, navigation }) {
   const [error, setError] = useState();

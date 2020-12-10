@@ -16,6 +16,8 @@ import { useTheme } from "@react-navigation/native";
 import useApi from "../hooks/useApi";
 import { forgerPassword } from "../Api/AppAuth";
 import { result } from "validate.js";
+import i18n from 'i18n-js';
+
 
 function ForgetPasswordDialog({ isModalVisible, setVisible }) {
   const { colors } = useTheme();
@@ -39,7 +41,7 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
       setConfirmed(true);
       return;
     }
-    setErrors("invalid email ");
+    setErrors(i18n.t("invalidEmail"));
     setErrorVisible(true);
   };
 
@@ -70,10 +72,10 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
         <Card style={styles.modelCardC}>
           <View>
             <AppText style={[styles.title, { color: colors.negative }]}>
-              Success
+              {i18n.t("success")}
             </AppText>
             <AppText style={[styles.subtitle, { color: colors.text }]}>
-              link to reset your password sent to you email
+            {i18n.t("linkToResetPasswordSenttoEmail")}
             </AppText>
           </View>
         </Card>
@@ -110,10 +112,10 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
             <Logo topFontsize={25} bottomFontsize={40} veho={colors.negative} />
           </View>
           <AppText style={[styles.title, { color: colors.negative }]}>
-            Foreget Password ?
+          {i18n.t("Forget")} {i18n.t("Password")}?
           </AppText>
           <AppText style={[styles.subtitle, { color: colors.text }]}>
-            Enter the email address associated with your account
+          {i18n.t("enterTheEmailAddeessAssociatedWithYourAccount")}
           </AppText>
           <View style={styles.inputText}>
             <TextInput
@@ -121,7 +123,7 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
                 styles.textInput,
                 { color: colors.text, backgroundColor: colors.header },
               ]}
-              placeholder="email address"
+              placeholder={i18n.t("emailAddress")}
               clearButtonMode="while-editing"
               placeholderTextColor={colors.textLight}
               autoCorrect={false}
@@ -133,7 +135,7 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
           <View style={styles.button}>
             <ErrorMessage visible={errorVisible} error={errors} />
             <AppButton
-              title="Reset Password"
+              title={i18n.t("resetPassword")}
               onPress={() => handleForgetPassword(userInfo)}
             />
           </View>

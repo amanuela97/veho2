@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
+import i18n from 'i18n-js';
 
 const Stack = createStackNavigator();
 

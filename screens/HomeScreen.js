@@ -37,6 +37,8 @@ import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AuthContextMain } from "../context/AppAuthContextMain";
+import i18n from 'i18n-js';
+
 function HomeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [error, setError] = useState();
@@ -140,7 +142,7 @@ function HomeScreen({ navigation }) {
                 color: "white",
               }}
             >
-              current queue status
+              {i18n.t("currentQueueStatus")}
             </AppText>
             {totalQueue?.length > 0 ? (
               <AppText
@@ -153,7 +155,7 @@ function HomeScreen({ navigation }) {
                 {totalQueue.length}
               </AppText>
             ) : (
-              <AppText style={{ color: colors.textLight }}>no Queue</AppText>
+              <AppText style={{ color: colors.textLight }}>{i18n.t("noQueue")}</AppText>
             )}
           </View>
         </Card>
@@ -164,7 +166,7 @@ function HomeScreen({ navigation }) {
           <View style={{ width: "100%" }}>
             <View style={{ alignSelf: "flex-start", width: "100%" }}>
               <AppText style={[styles.sectionTitle, { color: colors.text }]}>
-                chargers
+              {i18n.t("chargers")}
               </AppText>
             </View>
             <Card style={styles.textInputCard}>
@@ -178,7 +180,7 @@ function HomeScreen({ navigation }) {
                 </View>
                 <TextInput
                   style={[styles.textInput, { color: colors.text }]}
-                  placeholder="search a charger"
+                  placeholder={i18n.t("searchACharger")}
                   clearButtonMode="while-editing"
                   placeholderTextColor={colors.textLight}
                   autoCorrect={false}
@@ -199,7 +201,7 @@ function HomeScreen({ navigation }) {
                 if (item.status === "busy") {
                   Alert.alert(
                     "",
-                    "this charger is currently busy, please select a free charger",
+                    i18n.t("thisChargerBusySelectFree"),
                     [
                       {
                         text: "ok ",
@@ -211,7 +213,7 @@ function HomeScreen({ navigation }) {
                 } else {
                   Alert.alert(
                     "",
-                    "please create queue on the vehicle screen",
+                    i18n.t("pleaseCreateQueueOntheVehicleScreen"),
                     [
                       {
                         text: "ok ",

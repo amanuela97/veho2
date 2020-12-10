@@ -17,6 +17,7 @@ import { Octicons } from "@expo/vector-icons";
 import { AppContext } from "../context/AppThemeContext";
 import { useTheme } from "@react-navigation/native";
 import { AuthContextMain } from "../context/AppAuthContextMain";
+import i18n from 'i18n-js';
 
 export function DrawerContent(props) {
   const { isDarkTheme, toggleTheme } = useContext(AppContext);
@@ -50,20 +51,20 @@ export function DrawerContent(props) {
                   color={colors.text}
                 />
               )}
-              label="Add Vehicle"
+              label={i18n.t("addVehicle")}
               onPress={() => {
                 props.navigation.navigate("Vehicle");
               }}
             />
           </Drawer.Section>
-          <Drawer.Section title="Preferences">
+          <Drawer.Section title={i18n.t("preferences")}>
             <TouchableRipple
               onPress={() => {
                 toggleTheme();
               }}
             >
               <View style={styles.preference}>
-                <Text>Dark Theme</Text>
+                <Text>{i18n.t("darkTheme")}</Text>
                 <View pointerEvents="none">
                   <Switch value={isDarkTheme} />
                 </View>
@@ -77,7 +78,7 @@ export function DrawerContent(props) {
           icon={({ color, size }) => (
             <SimpleLineIcons name="logout" size={24} color={colors.text} />
           )}
-          label="Sign Out"
+          label={i18n.t("signOut")}
           onPress={() => {
             logout();
           }}

@@ -18,6 +18,7 @@ import { Card } from "react-native-paper";
 import LottieView from "lottie-react-native";
 import CircularProgress from "../CircularProgress";
 import { color } from "react-native-reanimated";
+import i18n from 'i18n-js';
 
 function ListItemCar({
   title,
@@ -38,27 +39,27 @@ function ListItemCar({
 
   const status = (carInfo) => {
     if (carInfo.chargingStatus === "0") {
-      return "Vehicle charging";
+      return i18n.t("Vehicleischarging");
     } else if (carInfo.chargingStatus === "1") {
-      return "End of Charge";
+      return i18n.t("EndofCharge");
     } else if (carInfo.chargingStatus === "2") {
-      return "Charge break";
+      return i18n.t("Chargebreak");
     } else if (carInfo.chargingStatus === "3") {
-      return "Charge cable unplugged";
+      return i18n.t("Chargecableunplugged");
     } else if (carInfo.chargingStatus === "4") {
-      return "Charging failure";
+      return i18n.t("Chargingfailure");
     } else if (carInfo.chargingStatus === "5") {
-      return "Slow Charging";
+      return i18n.t("SlowCharging");
     } else if (carInfo.chargingStatus === "6") {
-      return "Fast Charging";
+      return i18n.t("FastCharging");
     } else if (carInfo.chargingStatus === "7") {
-      return "Discharging";
+      return i18n.t("Discharging");
     } else if (carInfo.chargingStatus === "8") {
-      return "No charging";
+      return i18n.t("Nocharging");
     } else if (carInfo.chargingStatus === "9") {
-      return "Charging foreign object detection";
+      return i18n.t("Chargingforeignobjectdetection");
     } else {
-      return "vehicle not connected";
+      return i18n.t("vehiclenotconnected");
     }
   };
   const vhcStatus = status(carInfo);
@@ -95,11 +96,11 @@ function ListItemCar({
             </View>
             {carInfo.assigned && (
               <View style={styles.statusContainerAssigned}>
-                <AppText style={styles.queueStat}>Queue status</AppText>
+                <AppText style={styles.queueStat}>{i18n.t("queueStatus")}</AppText>
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
-                  <AppText style={styles.assign}>Assigned to</AppText>
+                  <AppText style={styles.assign}>{i18n.t("assignedTo")}</AppText>
                   <AppText style={styles.name}>{carInfo.chargerName}</AppText>
                 </View>
               </View>
@@ -114,7 +115,7 @@ function ListItemCar({
                     style={{ width: 60, height: 60 }}
                   />
                 </View>
-                <AppText style={styles.queueStat}>click to accept</AppText>
+                <AppText style={styles.queueStat}>{i18n.t("clickToAccept")}</AppText>
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -124,7 +125,7 @@ function ListItemCar({
                       fontSize: 12,
                     }}
                   >
-                    waiting confirmation
+                    {i18n.t("waitingConfirmation")}
                   </AppText>
                   <AppText style={styles.name}>{carInfo.chargerName}</AppText>
                 </View>
@@ -133,7 +134,7 @@ function ListItemCar({
 
             {carInfo.queue && (
               <View style={styles.statusContainerQueue}>
-                <AppText style={styles.queueStatQ}>Vehicle on Queue</AppText>
+                <AppText style={styles.queueStatQ}>{i18n.t("vehicleOnQueue")}</AppText>
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -147,7 +148,7 @@ function ListItemCar({
                     {carInfo.position}
                   </AppText>
                   <AppText style={{ fontSize: 12, color: "white" }}>
-                    position
+                  {i18n.t("position")}
                   </AppText>
                 </View>
               </View>
@@ -193,11 +194,11 @@ function ListItemCar({
             </View>
             {carInfo.assigned && (
               <View style={styles.statusContainerAssigned}>
-                <AppText style={styles.queueStat}>Queue status</AppText>
+                <AppText style={styles.queueStat}>{i18n.t("queueStatus")}</AppText>
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
-                  <AppText style={styles.assign}>Assigned to</AppText>
+                  <AppText style={styles.assign}>{i18n.t("assignedTo")}</AppText>
                   <AppText style={styles.name}>{carInfo.chargerName}</AppText>
                 </View>
               </View>
@@ -212,14 +213,14 @@ function ListItemCar({
                     style={{ width: 60, height: 60 }}
                   />
                 </View>
-                <AppText style={styles.queueStat}>click to accept</AppText>
+                <AppText style={styles.queueStat}>{i18n.t("clickToAccept")}</AppText>
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
                   <AppText
                     style={{ fontFamily: "OpenSans_600SemiBold", fontSize: 12 }}
                   >
-                    waiting confirmation
+                    {i18n.t("waitingConfirmation")}
                   </AppText>
                   <AppText style={styles.name}>{carInfo.chargerName}</AppText>
                 </View>
@@ -228,7 +229,7 @@ function ListItemCar({
 
             {carInfo.queue && (
               <View style={styles.statusContainerQueue}>
-                <AppText style={styles.queueStatQ}>Vehicle on Queue</AppText>
+                <AppText style={styles.queueStatQ}>{i18n.t("vehicleOnQueue")}</AppText>
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -242,7 +243,7 @@ function ListItemCar({
                     {carInfo.position}
                   </AppText>
                   <AppText style={{ fontSize: 12, color: "white" }}>
-                    position
+                  {i18n.t("position")}
                   </AppText>
                 </View>
               </View>

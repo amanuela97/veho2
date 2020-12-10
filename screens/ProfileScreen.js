@@ -27,6 +27,7 @@ import { Header } from "@react-navigation/stack";
 import { useTheme } from "@react-navigation/native";
 import { AppAuthContext } from "../context/AppAuthContext";
 import { db_auth, db_store } from "../Api/Db";
+import i18n from 'i18n-js';
 
 let newWidth = 100;
 let newHeight = 100;
@@ -144,7 +145,7 @@ function ProfileScreen({ navigation }) {
       />
       <View style={styles.mini}>
         <ListItem
-          title="username"
+          title={i18n.t("username")}
           subTitle={user.userName}
           backgroundColor={colors.header}
           IconComponent={<Icon name="face-profile" backgroundColor="green" />}
@@ -157,7 +158,7 @@ function ProfileScreen({ navigation }) {
           }
         />
         <ListItem
-          title="phone number"
+          title={i18n.t("phoneNumber")}
           subTitle={user.phoneNumber}
           backgroundColor={colors.header}
           IconComponent={<Icon name="phone-log" backgroundColor="orange" />}
@@ -172,7 +173,7 @@ function ProfileScreen({ navigation }) {
       </View>
       <View style={styles.mini}>
         <ListItem
-          title="password"
+          title={i18n.t("password")}
           subTitle="*******"
           backgroundColor={colors.header}
           IconComponent={<Icon name="shield-lock" backgroundColor="tomato" />}
@@ -185,7 +186,7 @@ function ProfileScreen({ navigation }) {
           }
         />
         <ListItem
-          title="delete account"
+          title={i18n.t("deleteAccount")}
           subTitle={user.userName}
           backgroundColor={colors.header}
           chevron={false}
@@ -193,16 +194,16 @@ function ProfileScreen({ navigation }) {
           onPress={() => {
             //var user = db_auth.currentUser;
             Alert.alert(
-              "Delete Account",
-              "Are you sure you want to delete this account?",
+              i18n.t("deleteAccount"),
+              i18n.t("areYouSureYouWantToDeleteAccount"),
               [
                 {
-                  text: "No",
+                  text: i18n.t("No"),
                   onPress: () => console.log("Cancel Pressed"),
                   style: "cancel",
                 },
                 {
-                  text: "YES",
+                  text: i18n.t("Yes"),
                   onPress: () => {
                     /*var user = db_auth.currentUser;
                   user.delete().then(function() {
@@ -222,7 +223,7 @@ function ProfileScreen({ navigation }) {
       </View>
       <View style={styles.logout}>
         <ListItem
-          title="Sign Out"
+          title={i18n.t("signOut")}
           backgroundColor={colors.header}
           onPress={() => {
             try {

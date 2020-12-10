@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useTheme } from "@react-navigation/native";
 import ProfileScreen from "../screens/ProfileScreen";
 import ProfileEditScreen from "../screens/ProfileEditScreen";
+import i18n from 'i18n-js';
 
 const Stack = createStackNavigator();
 
@@ -20,7 +21,7 @@ const ProfileStackNav = ({ navigation }) => {
         },
       }}
     >
-      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name={i18n.t("Profile")} component={ProfileScreen} />
       <Stack.Screen name="EditProfile" component={ProfileEditScreen} />
     </Stack.Navigator>
   );

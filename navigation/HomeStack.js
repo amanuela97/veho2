@@ -12,6 +12,9 @@ import ChargerDetailScreen from "../screens/ChargerDetailScreen";
 import CommentScreen from "../screens/CommentScreen";
 import CreateQueueScreen from "../screens/CreateQueueScreen";
 import QueueScreen from "../screens/QueueScreen";
+import i18n from 'i18n-js';
+
+
 const Stack = createStackNavigator();
 
 //
@@ -31,7 +34,7 @@ const HomeStack = ({ navigation }) => {
       }}
     >
       <Stack.Screen
-        name="Home"
+        name={i18n.t("Home")}
         component={HomeScreen}
         options={{
           headerLeft: () => (

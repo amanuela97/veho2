@@ -8,6 +8,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import ProfileScreen from "../screens/ProfileScreen";
 import ProfileStackNav from "./ProfileStackNav";
 import VehicleStatus from "../screens/VehicleStatus";
+import i18n from 'i18n-js';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -24,7 +25,7 @@ const TabNavigator = () => {
         name="Booking"
         component={HomeStack}
         options={{
-          tabBarLabel: "chargers",
+          tabBarLabel: i18n.t("chargers"),
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="charging-station" size={22} color={color} />
           ),
@@ -35,7 +36,7 @@ const TabNavigator = () => {
         name="EV Chargers"
         component={VehicleStatus}
         options={{
-          tabBarLabel: "vehicles",
+          tabBarLabel: i18n.t("vehicles"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons
               name="car-electric"
@@ -49,7 +50,7 @@ const TabNavigator = () => {
         name="Profile"
         component={ProfileStackNav}
         options={{
-          tabBarLabel: "profile",
+          tabBarLabel: i18n.t("profile"),
           tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="account" color={color} size={26} />
           ),

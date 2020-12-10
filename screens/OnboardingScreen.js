@@ -3,6 +3,7 @@ import { View, StyleSheet } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import * as Animatable from "react-native-animatable";
 import { useTheme } from "@react-navigation/native";
+import i18n from 'i18n-js';
 function OnboardingScreen({ navigation }) {
   const { colors } = useTheme();
   return (
@@ -15,7 +16,7 @@ function OnboardingScreen({ navigation }) {
         pages={[
           {
             backgroundColor: colors.background,
-            title: "Welcome",
+            title: i18n.t("Welcome"),
             image: (
               <Animatable.Image
                 animation="bounceIn"
@@ -29,11 +30,11 @@ function OnboardingScreen({ navigation }) {
                 source={require("../assets/calander.png")}
               />
             ),
-            subtitle: "Done with React Native Onboarding Swiper",
+            subtitle: i18n.t("manageyourCharging"),
           },
           {
             backgroundColor: colors.background,
-            title: "Welcome",
+            title: i18n.t("Welcome"),
             image: (
               <Animatable.Image
                 animation="swing"
@@ -49,11 +50,11 @@ function OnboardingScreen({ navigation }) {
                 source={require("../assets/car_charging.png")}
               />
             ),
-            subtitle: "Done with React Native Onboarding Swiper",
+            subtitle: i18n.t("manageyourCharging"),
           },
           {
             backgroundColor: colors.background,
-            title: "Welcome",
+            title: i18n.t("Welcome"),
             image: (
               <Animatable.Image
                 animation="swing"
@@ -69,7 +70,7 @@ function OnboardingScreen({ navigation }) {
                 source={require("../assets/chat.png")}
               />
             ),
-            subtitle: "Done with React Native Onboarding Swiper",
+            subtitle: i18n.t("manageyourCharging"),
           },
         ]}
       />

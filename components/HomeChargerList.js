@@ -10,6 +10,7 @@ import {
 } from "react-native-responsive-screen";
 
 import AppText from "./AppText";
+import i18n from 'i18n-js';
 
 function HomeChargerList({ onPress, item, renderRightActions }) {
   const { colors } = useTheme();
@@ -35,7 +36,7 @@ function HomeChargerList({ onPress, item, renderRightActions }) {
                 >
                   {item.name}
                 </AppText>
-                <AppText style={{ color: colors.textLight }}>fast</AppText>
+                <AppText style={{ color: colors.textLight }}>{i18n.t("fast")}</AppText>
               </View>
               <View style={styles.rightContainer}>
                 <View

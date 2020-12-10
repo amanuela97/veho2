@@ -18,6 +18,7 @@ import { handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { Picker } from "@react-native-picker/picker";
+import i18n from 'i18n-js';
 
 const validationSchema = Yup.object().shape({
   vehicle: Yup.string().required().min(4).label("vehicle"),
@@ -52,7 +53,7 @@ function AddVehicleScreen({ navigation }) {
     <View style={styles.container}>
       <Appbar.Header style={{ width: "100%" }}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Add vehicle" />
+        <Appbar.Content title={i18n.t("addVehicle")} />
       </Appbar.Header>
       <View style={styles.formContainer}>
         <UploadScreen
@@ -72,7 +73,7 @@ function AddVehicleScreen({ navigation }) {
             icon="car"
             style={{ width: "80%" }}
             name="vehicle"
-            placeholder="Vehicle Name"
+            placeholder={i18n.t("vehicleName")}
           />
           <View style={{ marginVertical: 10, height: 150, overflow: "hidden" }}>
             <Picker
@@ -84,7 +85,7 @@ function AddVehicleScreen({ navigation }) {
               }}
             >
               <Picker.Item
-                label="licensePlate"
+                label={i18n.t("licensePlateNumber")}
                 value="licensePlate"
                 color="red"
               />
@@ -98,7 +99,7 @@ function AddVehicleScreen({ navigation }) {
               icon="card"
               name="licensePlate"
               style={{ width: "80%" }}
-              placeholder="licensePlate"
+              placeholder={i18n.t("licensePlateNumber")}
             />
           )}
           {picker === "vin" && (
@@ -106,7 +107,7 @@ function AddVehicleScreen({ navigation }) {
               autoCorrect={false}
               icon="card"
               name="vin"
-              placeholder="Vin Number"
+              placeholder={i18n.t("vinNumber")}
             />
           )}
           <ErrorMessage
@@ -133,7 +134,7 @@ function AddVehicleScreen({ navigation }) {
               <RadioButton value="second" />
             </View>
           </RadioButton.Group> */}
-          <SubmitButton title="Add" />
+          <SubmitButton title={i18n.t("add")} />
         </Form>
       </View>
     </View>

@@ -18,6 +18,10 @@ import { AppContext } from "../context/AppThemeContext";
 import { CustomNativeDarkTheme } from "../config/themes/DarkNativeTheme";
 import { CustomLightNativeTheme } from "../config/themes/LightNativeTheme";
 import { AppAuthContext } from "../context/AppAuthContext";
+import * as Localization from 'expo-localization';
+import i18n from 'i18n-js';
+import english from '../assets/localization/english';
+import finnish from '../assets/localization/finnish';
 
 const Routes = () => {
   const { userAuth, setUserAuth } = useContext(AuthContextMain);
@@ -29,6 +33,14 @@ const Routes = () => {
     setDarkTheme(!isDarkTheme);
   }, [isDarkTheme]);
   const appTheme = isDarkTheme ? CustomNativeDarkTheme : CustomLightNativeTheme;
+
+  i18n.translations = {
+    en: english,
+    fi: finnish,
+  };
+  
+  i18n.locale = Localization.locale; // Set the locale at the beginning of the app
+  i18n.fallbacks = true // Can change to different language if not available
 
   const onAuthStateChanged = (user) => {
     setUserAuth(user);

@@ -5,6 +5,7 @@ import { Entypo } from "@expo/vector-icons";
 import colors from "../../config/colors";
 import AppText from "../AppText";
 import { MaterialIcons } from "@expo/vector-icons";
+import i18n from 'i18n-js';
 function ListItemAddQueueAction({
   onPress,
   onPressCancel,
@@ -18,7 +19,7 @@ function ListItemAddQueueAction({
         <TouchableWithoutFeedback onPress={onPress}>
           <View style={styles.container}>
             <Entypo name="add-to-list" size={35} color="white" />
-            <AppText style={{ fontSize: 10, color: "white" }}>Queue</AppText>
+            <AppText style={{ fontSize: 10, color: "white" }}>{i18n.t("queue")}</AppText>
           </View>
         </TouchableWithoutFeedback>
       )}
@@ -26,7 +27,7 @@ function ListItemAddQueueAction({
         <TouchableWithoutFeedback onPress={onPressCancel}>
           <View style={styles.containerD}>
             <MaterialIcons name="cancel" size={35} color="white" />
-            <AppText style={{ fontSize: 10, color: "white" }}>Queue</AppText>
+            <AppText style={{ fontSize: 10, color: "white" }}>{i18n.t("queue")}</AppText>
           </View>
         </TouchableWithoutFeedback>
       )}

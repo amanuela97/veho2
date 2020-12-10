@@ -24,6 +24,7 @@ import useApi from "../hooks/useApi";
 import { loginUser } from "../Api/AppAuth";
 import { db_auth } from "../Api/Db";
 import { AuthContextMain } from "../context/AppAuthContextMain";
+import i18n from 'i18n-js';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -60,7 +61,7 @@ function LoginScreen({ navigation }) {
         duration={2000}
         style={styles.footer}
       >
-        <AppText style={styles.login}>Welcome!</AppText>
+        <AppText style={styles.login}>{i18n.t("Welcome")}!</AppText>
         <Form
           initialValues={{ email: "", password: "" }}
           onSubmit={handleSubmit}
@@ -72,7 +73,7 @@ function LoginScreen({ navigation }) {
             icon="email"
             keyboardType="email-address"
             name="email"
-            placeholder="Email"
+            placeholder={i18n.t("Email")}
             textContentType="emailAddress"
           />
           <FormField
@@ -80,20 +81,20 @@ function LoginScreen({ navigation }) {
             autoCorrect={false}
             icon="lock"
             name="password"
-            placeholder="Password"
+            placeholder={i18n.t("Password")}
             secureTextEntry
             textContentType="password"
           />
           <ErrorMessage
             visible={loginErrorVisible}
-            error="Invalid login credential"
+            error={i18n.t("invalidLoginCredential")}
           />
           <TouchableOpacity
             style={styles.forgetPassword}
             onPress={() => setModalVisible(true)}
           >
             <AppText style={[{ color: colors.primary }]}>
-              Forget Password ?
+            {i18n.t("Forget")} {i18n.t("Password")} ?
             </AppText>
 
             <ForgetPasswordDialog
@@ -102,10 +103,10 @@ function LoginScreen({ navigation }) {
             />
           </TouchableOpacity>
 
-          <SubmitButton title="Login" />
+          <SubmitButton title={i18n.t("Login")} />
           <AppButton
             color="#3d348b"
-            title="signup"
+            title={i18n.t("signup")}
             onPress={() => navigation.navigate("Signup")}
           />
         </Form>

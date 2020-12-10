@@ -33,6 +33,7 @@ import CarAnim from "./CarAnim";
 import useNotifications from "../hooks/useNotifications";
 import AppButton from "../components/AppButton";
 import { result } from "validate.js";
+import i18n from 'i18n-js';
 
 function VehicleStatus({ navigation }) {
   const [error, setError] = useState();
@@ -59,8 +60,8 @@ function VehicleStatus({ navigation }) {
   const handleDeleteVehicles = async (item) => {
     if (item.queue || item.waitingConfirmation || item.assigned) {
       Alert.alert(
-        "vehicle on Queue ",
-        "please swipe to the right to cancel the queue first",
+        i18n.t("vehicleOnQueue"),
+        i18n.t("pleaseSwipeToRight"),
 
         { cancelable: true }
       );
@@ -149,7 +150,7 @@ function VehicleStatus({ navigation }) {
           height: 40,
         }}
       >
-        <Appbar.Content title="vehicles" />
+        <Appbar.Content title={i18n.t("vehicles")} />
       </Appbar.Header>
       <ListItemSeparator />
       <View
@@ -161,7 +162,7 @@ function VehicleStatus({ navigation }) {
         <View style={styles.searchContainer}>
           <View>
             <AppText style={[styles.sectionTitle, { color: colors.text }]}>
-              vehicle collection
+            {i18n.t("vehiclesCollection")}
             </AppText>
           </View>
           <Card style={styles.textInputCard}>
@@ -175,7 +176,7 @@ function VehicleStatus({ navigation }) {
               </View>
               <TextInput
                 style={[styles.textInput, { color: colors.text }]}
-                placeholder="search a vehicle"
+                placeholder={i18n.t("searchAVehicle")}
                 clearButtonMode="while-editing"
                 placeholderTextColor={colors.textLight}
                 autoCorrect={false}

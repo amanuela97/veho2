@@ -15,6 +15,7 @@ import {
 import { ErrorMessage } from "../components/forms";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
+import i18n from 'i18n-js';
 
 function ProfileEditScreen({ route, navigation }) {
   const [userInfo, setUserInfo] = useState("");
@@ -133,7 +134,7 @@ function ProfileEditScreen({ route, navigation }) {
         <Card style={[styles.textInputCard, { display: password }]}>
           <TextInput
             style={[styles.textInput, { color: colors.text }]}
-            placeholder="change password"
+            placeholder={i18n.t("changePassword")}
             clearButtonMode="while-editing"
             maxLength={30}
             textContentType="newPassword"
@@ -146,7 +147,7 @@ function ProfileEditScreen({ route, navigation }) {
           />
         </Card>
         <AppButton
-          title="submit"
+          title={i18n.t("submit")}
           color={colors.primary}
           onPress={() => {
             if (userName !== "none") {

@@ -23,6 +23,7 @@ import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { AuthContextMain } from "../context/AppAuthContextMain";
 import { useTheme } from "@react-navigation/native";
+import i18n from 'i18n-js';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -71,7 +72,7 @@ function SignupScreen() {
         style={{ flex: 1 }}
       >
         <KeyboardAwareScrollView style={styles.keyboardAware}>
-          <AppText style={styles.register}>Register</AppText>
+          <AppText style={styles.register}>{i18n.t("Register")}</AppText>
           <Form
             initialValues={{ name: "", email: "", password: "" }}
             onSubmit={handleRegister}
@@ -93,7 +94,7 @@ function SignupScreen() {
               autoCorrect={false}
               icon="account"
               name="name"
-              placeholder="Name"
+              placeholder={i18n.t("Name")}
             />
             <FormField
               autoCapitalize="none"
@@ -101,7 +102,7 @@ function SignupScreen() {
               icon="email"
               keyboardType="email-address"
               name="email"
-              placeholder="Email"
+              placeholder={i18n.t("Email")}
               textContentType="emailAddress"
             />
 
@@ -110,18 +111,18 @@ function SignupScreen() {
               autoCorrect={false}
               icon="lock"
               name="password"
-              placeholder="Password"
+              placeholder={i18n.t("Password")}
               secureTextEntry
               textContentType="password"
             />
 
             <PhoneInput
-              placeholder="Enter phone number"
+              placeholder={i18n.t("enterPhoneNumber")}
               value={value}
               onChangeFormattedText={(item) => setValue(item)}
             />
             <View style={styles.button}>
-              <SubmitButton title="Register" />
+              <SubmitButton title={i18n.t("Register" )}/>
             </View>
           </Form>
           <ErrorMessage error={error} visible={error} />
