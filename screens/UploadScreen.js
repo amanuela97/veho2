@@ -2,14 +2,10 @@ import React from "react";
 import { View, StyleSheet, Modal } from "react-native";
 import LottieView from "lottie-react-native";
 import { useTheme } from "@react-navigation/native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
 function UploadScreen({ onDone, visible = false }) {
   const { colors } = useTheme();
-
+  console.log("hhhhhhhhhhhhh");
   return (
     <Modal visible={visible}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -27,8 +23,8 @@ function UploadScreen({ onDone, visible = false }) {
 
 const styles = StyleSheet.create({
   animation: {
-    width: wp("40%"),
-    height: wp("40%"),
+    width: 200,
+    height: 200,
   },
   container: {
     alignItems: "center",

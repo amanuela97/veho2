@@ -27,6 +27,10 @@ import { Header } from "@react-navigation/stack";
 import { useTheme } from "@react-navigation/native";
 import { AppAuthContext } from "../context/AppAuthContext";
 import { db_auth, db_store } from "../Api/Db";
+import { deleteAccount } from "../Api/AppAuth";
+import useApi from "../hooks/useApi";
+import { result } from "validate.js";
+import UploadScreen from "./UploadScreen";
 
 let newWidth = 100;
 let newHeight = 100;
@@ -35,39 +39,24 @@ let rotation = 0;
 
 function ProfileScreen({ navigation }) {
   const { user } = useContext(AppAuthContext);
+  const deleteAccountApi = useApi(deleteAccount);
   const { colors } = useTheme();
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(true);
 
-  /*  const getData = async () => {
+  const handleDelete = async () => {
+    const request = await deleteAccountApi.request(user.userId);
+    if (request.error) {
+      const err = request.data;
+      console.log(err);
+      Alert.alert(
+        "Delete Account",
+        err,
 
-    const docu = await db_store.collection("veho").doc();
-    const docuQ = await db_store
-      .collection("veho")
-      .doc(docu.id)
-      .set({
-        type:'charger',
-        id:docu.id,
-        name:'charger seveen',
-        comment:{userId:[{'comment':'am waiting','time':'12:30','userName':'beselam'}]},
-        queue: [
-          
-        ],
-        })
-   
-  }; 
-  useEffect(() => {
-     const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
-       displayChargers();
-     });
-     return () => unsubscribe(); 
-    
-   }, []);*/
-
-  //ask for camera/roll permission
-  useEffect(() => {
-  
-  }, []);
+        { cancelable: false }
+      );
+    }
+  };
 
   //select the image
   const pickImage = async () => {
@@ -128,6 +117,7 @@ function ProfileScreen({ navigation }) {
         chevron={false}
         backgroundColor={colors.header}
       />
+
       <View style={styles.mini}>
         <ListItem
           title="username"
@@ -190,14 +180,7 @@ function ProfileScreen({ navigation }) {
                 {
                   text: "YES",
                   onPress: () => {
-                    /*var user = db_auth.currentUser;
-                  user.delete().then(function() {
-                  // User deleted.
-                  console.log('account deleted');
-                  }).catch(function(error) {
-                  // An error happened.
-                    console.log(error);
-                  });*/
+                    handleDelete();
                   },
                 },
               ],

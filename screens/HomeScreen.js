@@ -57,7 +57,6 @@ function HomeScreen({ navigation }) {
     const chargers = await chargerListApi.request();
     await setChargers(chargers.data);
     setChargerSearch(chargers.data);
-    console.log(chargers.data);
   };
 
   const handleSearch = (text) => {
@@ -191,6 +190,7 @@ function HomeScreen({ navigation }) {
         </View>
         <FlatList
           data={chargers}
+          showsVerticalScrollIndicator={false}
           keyExtractor={(list) => list.id}
           renderItem={({ item }) => (
             <HomeChargerList

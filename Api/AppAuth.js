@@ -63,23 +63,17 @@ export const forgerPassword = async (email) => {
   }
 };
 
-/* const getData = async () => {
+export const deleteAccount = async (id) => {
+  try {
+    const userA = await db_auth.currentUser.delete();
+    const user = await db_store.collection("users").doc(id).delete();
 
-
-      const docu = await db_store.collection("veho").doc();
-      const docuQ = await db_store
-        .collection("queue")
-        .doc(docu.id)
-        .set({
-          type:'charger',
-          id:docu.id,
-          name:'charger three',
-          comment:{userId:[{'comment':'am waiting','time':'12:30','userName':'beselam'}]},
-          queue: [
-            { userName: "lom", userId: "34123455" },
-            { userName: "chaa", userId: "23123455" },
-            { userName: "moam", userId: "1223233455" },
-          ],
-          })
-     
-    }; */
+    return requestResult(false, "deleted");
+  } catch (e) {
+    console.log(e);
+    return requestResult(
+      true,
+      "This operation is sensitive and requires recent authentication. Log in again before retrying this request"
+    );
+  }
+};

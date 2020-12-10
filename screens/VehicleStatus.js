@@ -55,7 +55,6 @@ function VehicleStatus({ navigation }) {
     setSearchVehicles(vehiclesList.data);
   };
 
-
   const handleDeleteVehicles = async (item) => {
     if (item.queue || item.waitingConfirmation || item.assigned) {
       Alert.alert(
@@ -76,6 +75,7 @@ function VehicleStatus({ navigation }) {
 
   const handleCreateQueue = async (vehicle) => {
     const queue = await createQueueApi.request(vehicle, user);
+    console.log(queue);
     if (!queue.error) {
       setUploadVisible(true);
     }

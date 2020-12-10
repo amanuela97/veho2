@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 
 import AppText from "../components/AppText";
 import * as Yup from "yup";
@@ -14,9 +14,10 @@ import Screen from "../components/Screen";
 import { Appbar, RadioButton, Text } from "react-native-paper";
 import { AppAuthContext } from "../context/AppAuthContext";
 import useApi from "../hooks/useApi";
-import { handleAddCar } from "../Api/DbRequests";
+import { addVehicle, handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
+import { db_auth } from "../Api/Db";
 
 const validationSchema = Yup.object().shape({
   vehicle: Yup.string().required().min(4).label("vehicle"),
@@ -30,21 +31,64 @@ function AddVehicleScreen({ navigation }) {
   const [picker, setPicker] = useState("licensePlate");
   const [value, setValue] = React.useState("first");
   const addVehicleApi = useApi(handleAddCar);
+  const addVehicleDataApi = useApi(addVehicle);
   const { user } = useContext(AppAuthContext);
   const { colors } = useTheme();
 
   const handleSubmit = async (vehicleInfo) => {
     // if vin and plate fields are both empty return
+
     if (!vehicleInfo.licensePlate && !vehicleInfo.vin) {
       return;
     }
     const result = await addVehicleApi.request(vehicleInfo, picker);
-    if (!result.error) {
+    console.log("nowwwwww", result);
+    const vehicleDa = result.data;
+    if (!result.error && vehicleDa.carInfo !== undefined) {
+      //   const vehicleD = addVehicleDataApi.request(vehicleInfo,)
+      const vehicleD = await addVehicleDataApi.request(
+        vehicleInfo,
+        vehicleDa.vin,
+        vehicleDa.carInfo,
+        db_auth.currentUser.uid,
+        true
+      );
+      console.log(vehicleD);
       setUploadVisible(true);
+      return;
+    }
+    if (!result.error && vehicleDa.catInfo === undefined) {
+      Alert.alert(
+        `${picker} is invalid`,
+        "Register vehicle anyways?",
+        [
+          {
+            text: "Yes",
+            onPress: async () => {
+              const vehicleD = await addVehicleDataApi.request(
+                vehicleInfo,
+                vehicleDa.vin,
+                vehicleDa.carInfo,
+                db_auth.currentUser.uid,
+                false
+              );
+              setUploadVisible(true);
+              return;
+            },
+          },
+          {
+            text: "No",
+            onPress: () => {
+              return;
+            },
+          },
+        ],
+        { cancelable: true }
+      );
     }
   };
 
-  if (addVehicleApi.loading) {
+  if (addVehicleApi.loading || addVehicleDataApi.loading) {
     return <ActivityIndicator visible={true} />;
   }
   return (
@@ -56,6 +100,7 @@ function AddVehicleScreen({ navigation }) {
       <View style={styles.formContainer}>
         <UploadScreen
           onDone={() => {
+            console.log("ddddddddbbbbbdddduuuuudddd");
             setUploadVisible(false);
             navigation.goBack();
           }}

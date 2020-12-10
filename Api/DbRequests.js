@@ -138,24 +138,32 @@ export const updatePassword = async (userInfo) => {
 };
 
 export const handleAddCar = async (vehicleInfo, picker) => {
-  // check if token has expired
-  var expires_in = await SecureStore.getItemAsync("expires_in");
-  if (parseInt(Date.now()) >= parseInt(expires_in) || !expires_in) {
-    console.log("token has expired or hasnt been generated, refreshing token");
-    await fetchToken();
-  }
-  var token = await SecureStore.getItemAsync("token");
+  try {
+    // check if token has expired
+    var expires_in = await SecureStore.getItemAsync("expires_in");
+    if (parseInt(Date.now()) >= parseInt(expires_in) || !expires_in) {
+      console.log(
+        "token has expired or hasnt been generated, refreshing token"
+      );
+      await fetchToken();
+    }
+    var token = await SecureStore.getItemAsync("token");
 
-  //fetch vin if liecensePlate was provided
-  var vin = vehicleInfo.vin;
-  if (picker === "licensePlate") {
-    vin = await fetchVin(vehicleInfo.licensePlate, token);
+    //fetch vin if liecensePlate was provided
+    var vin = vehicleInfo.vin;
+    if (picker === "licensePlate") {
+      vin = await fetchVin(vehicleInfo.licensePlate, token);
+    }
+    console.log("jjjjjkkkk", vin, token);
+    var carInfo = await fetchCarDetails(token, vin);
+
+    var user = db_auth.currentUser;
+    const data = { carInfo: carInfo, vin: vin };
+    return requestResult(false, data);
+  } catch (e) {
+    return requestResult(true, "unable to add the vehicle");
   }
-  console.log(vin, token);
-  var carInfo = await fetchCarDetails(token, vin);
-  console.log(carInfo);
-  var user = db_auth.currentUser;
-  if (carInfo == undefined) {
+  /*  if (carInfo === undefined) {
     Alert.alert(
       `${picker} is invalid`,
       "Register vehicle anyways?",
@@ -163,7 +171,8 @@ export const handleAddCar = async (vehicleInfo, picker) => {
         {
           text: "Yes",
           onPress: () => {
-            addVehicle(vehicleInfo, vin, carInfo, user, false);
+         const result = await  addVehicle(vehicleInfo, vin, carInfo, user, false);
+         return result
           },
         },
         {
@@ -175,9 +184,11 @@ export const handleAddCar = async (vehicleInfo, picker) => {
       ],
       { cancelable: true }
     );
-    return;
+    console.log("hereee");
+    return requestResult(false, " vehicle added"); 
   }
-  addVehicle(vehicleInfo, vin, carInfo, user, true);
+  const result = await addVehicle(vehicleInfo, vin, carInfo, user, true);
+  return result;*/
 };
 
 export const addVehicle = async (
@@ -197,7 +208,7 @@ export const addVehicle = async (
       vin: vin ? vin : vehicleInfo.licensePlate,
       name: vehicleInfo.vehicle,
       vehicleId: vin ? vin : vehicleInfo.licensePlate,
-      ownerId: user.uid,
+      ownerId: user,
       connected: connected,
       otherInfo: "null",
       assigned: false,
@@ -214,6 +225,7 @@ export const addVehicle = async (
       waitingConfirmation: false,
       timestamp: firestore.FieldValue.serverTimestamp(),
     });
+    console.log("adeddd");
     return requestResult(false, vehicleData);
   } catch (error) {
     console.log("unable to add vehicle", error.message);
@@ -265,6 +277,7 @@ export const createChargingQueue = async (vehicle, user) => {
       .get();
     if (freeCharger.docs[0]) {
       const charger = freeCharger.docs[0].data();
+      console.log("chargerrrr", charger);
       const data = await db_store.collection("veho").doc(charger.id).update({
         status: "busy",
         currentUserId: user.userId,
