@@ -31,7 +31,6 @@ export default useNotifications = (notificationListener) => {
       }
       const token = (await Notifications.getExpoPushTokenAsync()).data;
       setUserToken(token, db_auth.currentUser.uid);
-      console.log(token);
     } else {
       alert("Must use physical device for Push Notifications");
     }

@@ -27,7 +27,14 @@ import { Header } from "@react-navigation/stack";
 import { useTheme } from "@react-navigation/native";
 import { AppAuthContext } from "../context/AppAuthContext";
 import { db_auth, db_store } from "../Api/Db";
+<<<<<<< HEAD
 import i18n from 'i18n-js';
+=======
+import { deleteAccount } from "../Api/AppAuth";
+import useApi from "../hooks/useApi";
+import { result } from "validate.js";
+import UploadScreen from "./UploadScreen";
+>>>>>>> f76e62f835069811be6baafbebee3d3f41bd708e
 
 let newWidth = 100;
 let newHeight = 100;
@@ -36,53 +43,24 @@ let rotation = 0;
 
 function ProfileScreen({ navigation }) {
   const { user } = useContext(AppAuthContext);
+  const deleteAccountApi = useApi(deleteAccount);
   const { colors } = useTheme();
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(true);
 
-  /*  const getData = async () => {
+  const handleDelete = async () => {
+    const request = await deleteAccountApi.request(user.userId);
+    if (request.error) {
+      const err = request.data;
+      console.log(err);
+      Alert.alert(
+        "Delete Account",
+        err,
 
-    const docu = await db_store.collection("veho").doc();
-    const docuQ = await db_store
-      .collection("veho")
-      .doc(docu.id)
-      .set({
-        type:'charger',
-        id:docu.id,
-        name:'charger seveen',
-        comment:{userId:[{'comment':'am waiting','time':'12:30','userName':'beselam'}]},
-        queue: [
-          
-        ],
-        })
-   
-  }; 
-  useEffect(() => {
-     const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
-       displayChargers();
-     });
-     return () => unsubscribe(); 
-    
-   }, []);*/
-
-  //ask for camera/roll permission
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const {
-          status,
-        } = await ImagePicker.requestCameraRollPermissionsAsync();
-        const { status2 } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted" && status2 !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!");
-        }
-      }
-      if (image == null) {
-        //fetch image inside here
-      }
-      setUploading(false);
-    })();
-  }, []);
+        { cancelable: false }
+      );
+    }
+  };
 
   //select the image
   const pickImage = async () => {
@@ -143,6 +121,7 @@ function ProfileScreen({ navigation }) {
         chevron={false}
         backgroundColor={colors.header}
       />
+
       <View style={styles.mini}>
         <ListItem
           title={i18n.t("username")}
@@ -205,14 +184,7 @@ function ProfileScreen({ navigation }) {
                 {
                   text: i18n.t("Yes"),
                   onPress: () => {
-                    /*var user = db_auth.currentUser;
-                  user.delete().then(function() {
-                  // User deleted.
-                  console.log('account deleted');
-                  }).catch(function(error) {
-                  // An error happened.
-                    console.log(error);
-                  });*/
+                    handleDelete();
                   },
                 },
               ],
