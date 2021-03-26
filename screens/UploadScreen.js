@@ -5,7 +5,6 @@ import { useTheme } from "@react-navigation/native";
 
 function UploadScreen({ onDone, visible = false }) {
   const { colors } = useTheme();
-  console.log("hhhhhhhhhhhhh");
   return (
     <Modal visible={visible}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>

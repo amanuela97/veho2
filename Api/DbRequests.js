@@ -11,9 +11,16 @@ const requestResult = (hasError, dataReceived) => {
 
 export const getChargers = async () => {
   try {
-    console.log("request to chargers");
+    const user = await db_store
+      .collection("users")
+      .doc(db_auth.currentUser.uid)
+      .get();
+    const company = await user.data().company;
     const collection = [];
-    const result = await db_store.collection("veho").get();
+    const result = await db_store
+      .collection("veho")
+      .where("company", "==", company)
+      .get();
     result.docs.map((doc) => {
       collection.push(doc.data());
     });
@@ -36,14 +43,31 @@ export const getCharger = async (chargerId) => {
   }
 };
 
+export const getCompanyList = async () => {
+  try {
+    console.log("request to a company");
+    const collection = [];
+    const result = await db_store.collection("company").get();
+    result.docs.map((doc) => {
+      collection.push(doc.data());
+    });
+
+    return requestResult(false, collection);
+  } catch (error) {
+    return requestResult(true, "error getting company data");
+  }
+};
+
 export const getUserData = async () => {
   try {
-    console.log("request to a charger", db_auth.currentUser.uid);
+    console.log("request to a user", db_auth.currentUser.uid);
     const result = await db_store
       .collection("users")
       .doc(db_auth.currentUser.uid)
       .get();
-    return requestResult(false, result.data());
+    const user = await result.data();
+    console.log("userrr", user);
+    return requestResult(false, user);
   } catch (error) {
     return requestResult(true, "error getting data");
   }
@@ -68,22 +92,6 @@ export const createQueue = async (userId, userName, chargerId) => {
   }
 };
 
-/* export const cancelQueue = async (chargerId, queue) => {
-  try {
-    console.log("request to cancel queue");
-    const data = await db_store
-      .collection("veho")
-      .doc(chargerId)
-      .update({
-        queue: firebase.firestore.FieldValue.arrayRemove(queue),
-      });
-    return requestResult(false, "removed");
-  } catch (error) {
-    console.log("error while removing", error.message);
-    return requestResult(true, "unable to remove a queue");
-  }
-};
- */
 export const updateUsername = async (userInfo, userId) => {
   try {
     console.log("request to update user info");
@@ -163,32 +171,6 @@ export const handleAddCar = async (vehicleInfo, picker) => {
   } catch (e) {
     return requestResult(true, "unable to add the vehicle");
   }
-  /*  if (carInfo === undefined) {
-    Alert.alert(
-      `${picker} is invalid`,
-      "Register vehicle anyways?",
-      [
-        {
-          text: "Yes",
-          onPress: () => {
-         const result = await  addVehicle(vehicleInfo, vin, carInfo, user, false);
-         return result
-          },
-        },
-        {
-          text: "No",
-          onPress: () => {
-            return;
-          },
-        },
-      ],
-      { cancelable: true }
-    );
-    console.log("hereee");
-    return requestResult(false, " vehicle added"); 
-  }
-  const result = await addVehicle(vehicleInfo, vin, carInfo, user, true);
-  return result;*/
 };
 
 export const addVehicle = async (
@@ -272,6 +254,7 @@ export const createChargingQueue = async (vehicle, user) => {
     console.log("request to queue");
     const freeCharger = await db_store
       .collection("veho")
+      .where("company", "==", user.company)
       .where("status", "==", "free")
       .limit(1)
       .get();
@@ -294,11 +277,12 @@ export const createChargingQueue = async (vehicle, user) => {
         charger.id,
         0
       );
+
       return requestResult(false, request);
     } else {
       const data = await db_store
         .collection("queue")
-        .doc("vehoAirportQueue")
+        .doc(user.company)
         .update({
           queue: firebase.firestore.FieldValue.arrayUnion(vehicle.vehicleId),
         });
@@ -313,10 +297,12 @@ export const createChargingQueue = async (vehicle, user) => {
 
 export const getQueueList = async () => {
   try {
-    const vehicle = await db_store
-      .collection("queue")
-      .doc("vehoAirportQueue")
+    const user = await db_store
+      .collection("users")
+      .doc(db_auth.currentUser.uid)
       .get();
+    const company = await user.data().company;
+    const vehicle = await db_store.collection("queue").doc(company).get();
     const queue = await vehicle.data().queue;
 
     return requestResult(false, queue);
@@ -326,12 +312,12 @@ export const getQueueList = async () => {
   }
 };
 
-export const cancelQueue = async (vehicle) => {
+export const cancelQueue = async (vehicle, user) => {
   try {
     if (vehicle.queue && !vehicle.assigned) {
       const data = await db_store
         .collection("queue")
-        .doc("vehoAirportQueue")
+        .doc(user.company)
         .update({
           queue: firebase.firestore.FieldValue.arrayRemove(vehicle.vehicleId),
         });
@@ -416,51 +402,22 @@ export const updateVehicleSingleInfo = async (
   }
 };
 
-/* export const chargerListener = async (list) => {
+export const addCharger = async (
+  chargerInfo,
+  vin,
+  carInfo,
+  user,
+  connected
+) => {
   try {
-    const vehicle = await db_store
-      .collection("queue")
-      .doc("vehoAirportQueue")
-      .get();
-    const queue = await vehicle.data().queue;
-    const charger = await db_store
-      .collection("veho")
-      .where("status", "==", "free")
-      .limit(1)
-      .get();
-    if (charger.docs[0] && queue.length > 0) {
-      const chargerData = charger.docs[0].data();
-      const vehicleId = queue[0];
-      const data = await db_store
-        .collection("queue")
-        .doc("vehoAirportQueue")
-        .update({
-          queue: firebase.firestore.FieldValue.arrayRemove(vehicleId),
-        });
+    console.log("request to add Vehicle");
+    const vehicle = await db_store.collection("veho airport").doc();
 
-      const updateVehicleData = await updateVehicleSingleInfo(
-        vehicleId,
-        false,
-        false,
-        true,
-        chargerData.name,
-        chargerData.id,
-        0
-      );
-      const updateCharger = await db_store
-        .collection("veho")
-        .doc(chargerData.id)
-        .update({
-          status: "busy",
-          currentUserId: "null",
-
-          currentUsername: "null",
-          chargingVehicleId: vehicleId,
-          chargingVehicleName: "null",
-        });
-    }
+    const vehicleData = await vehicle.set({});
+    console.log("adeddd");
+    return requestResult(false, vehicleData);
   } catch (error) {
-    console.log(error);
+    console.log("unable to add vehicle", error.message);
+    return requestResult(true, "unable to add the vehicle");
   }
 };
- */

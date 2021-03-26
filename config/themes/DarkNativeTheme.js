@@ -15,6 +15,7 @@ export const CustomNativeDarkTheme = {
     textLight: "#d6d6d6",
     drawer: "#333333",
     header: "#333333",
+    homeHeader: "#333333",
     negative: "white",
     tab: "white",
     separator: "#202020",

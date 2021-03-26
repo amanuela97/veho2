@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+/* import React, { useContext, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 import { createChargingQueue, getVehicles } from "../Api/DbRequests";
@@ -46,9 +46,9 @@ function CreateQueueScreen({ navigation }) {
     }
   };
 
-  useEffect(() => {
+    useEffect(() => {
     handleGetVehicles();
-  }, []);
+  }, []); 
 
   if (getVehicleApi.loading || createQueueApi.loading) {
     return <ActivityIndicator visible={true} />;
@@ -90,3 +90,4 @@ const styles = StyleSheet.create({
 });
 
 export default CreateQueueScreen;
+ */

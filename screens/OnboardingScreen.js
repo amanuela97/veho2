@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
 import * as Animatable from "react-native-animatable";
 import { useTheme } from "@react-navigation/native";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 function OnboardingScreen({ navigation }) {
   const { colors } = useTheme();
   return (
@@ -48,26 +48,6 @@ function OnboardingScreen({ navigation }) {
                   overflow: "visible",
                 }}
                 source={require("../assets/car_charging.png")}
-              />
-            ),
-            subtitle: i18n.t("manageyourCharging"),
-          },
-          {
-            backgroundColor: colors.background,
-            title: i18n.t("Welcome"),
-            image: (
-              <Animatable.Image
-                animation="swing"
-                duration={2000}
-                iterationCount="infinite"
-                iterationDelay={5000}
-                style={{
-                  width: 200,
-                  height: 200,
-
-                  overflow: "visible",
-                }}
-                source={require("../assets/chat.png")}
               />
             ),
             subtitle: i18n.t("manageyourCharging"),

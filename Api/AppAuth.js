@@ -1,6 +1,6 @@
 import { log } from "react-native-reanimated";
 
-const { db_auth, db_store } = require("./Db");
+const { db_auth, db_store, db_signUp } = require("./Db");
 const requestResult = (hasError, dataReceived) => {
   const status = { error: hasError, data: dataReceived };
   return status;
@@ -65,9 +65,8 @@ export const forgerPassword = async (email) => {
 
 export const deleteAccount = async (id) => {
   try {
-    const userA = await db_auth.currentUser.delete();
     const user = await db_store.collection("users").doc(id).delete();
-
+    const userA = await db_auth.currentUser.delete();
     return requestResult(false, "deleted");
   } catch (e) {
     console.log(e);

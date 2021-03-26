@@ -82,7 +82,7 @@ const finnish = {
   waitingConfirmation: "odotusvahvistus",
   vehicleOnQueue: "Ajoneuvo jonossa",
   position: "sijainti",
-
+  registrationCode: "rekisteröintikoodi",
   Home: "Koti",
   fast: "nopea",
 

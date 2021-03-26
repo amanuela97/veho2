@@ -8,7 +8,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import ProfileScreen from "../screens/ProfileScreen";
 import ProfileStackNav from "./ProfileStackNav";
 import VehicleStatus from "../screens/VehicleStatus";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 
 const Tab = createMaterialBottomTabNavigator();
 

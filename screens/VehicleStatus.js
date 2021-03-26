@@ -34,13 +34,14 @@ import useNotifications from "../hooks/useNotifications";
 import AppButton from "../components/AppButton";
 import { result } from "validate.js";
 import i18n from "i18n-js";
+import { AuthContextMain } from "../context/AppAuthContextMain";
 
 function VehicleStatus({ navigation }) {
   const [error, setError] = useState();
   const [vehicles, setVehicles] = useState([]);
   const [searchVehicles, setSearchVehicles] = useState([]);
   const [uploadVisible, setUploadVisible] = useState(false);
-  const { user } = useContext(AppAuthContext);
+  const { userAuth, setUserAuth } = useContext(AuthContextMain);
 
   const getVehicleApi = useApi(getVehicles);
   const deleteVehicleApi = useApi(deleteVehicle);
@@ -75,14 +76,14 @@ function VehicleStatus({ navigation }) {
   };
 
   const handleCreateQueue = async (vehicle) => {
-    const queue = await createQueueApi.request(vehicle, user);
+    const queue = await createQueueApi.request(vehicle, userAuth);
     console.log(queue);
     if (!queue.error) {
       setUploadVisible(true);
     }
   };
   const handleCancelQueue = async (vehicle) => {
-    const queue = await cancelQueueApi.request(vehicle);
+    const queue = await cancelQueueApi.request(vehicle, userAuth);
     if (!queue.error) {
       setUploadVisible(true);
     }

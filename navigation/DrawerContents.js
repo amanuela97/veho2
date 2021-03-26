@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import {
   Avatar,
   Title,
@@ -17,11 +17,11 @@ import { Octicons } from "@expo/vector-icons";
 import { AppContext } from "../context/AppThemeContext";
 import { useTheme } from "@react-navigation/native";
 import { AuthContextMain } from "../context/AppAuthContextMain";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 
 export function DrawerContent(props) {
   const { isDarkTheme, toggleTheme } = useContext(AppContext);
-  const { logout } = useContext(AuthContextMain);
+  const { logout, userAuth } = useContext(AuthContextMain);
   const { colors } = useTheme();
   return (
     <View style={{ flex: 1, backgroundColor: colors.drawer }}>
@@ -30,13 +30,21 @@ export function DrawerContent(props) {
           <Drawer.Section>
             <View style={styles.userInfoSection}>
               <View style={{ flexDirection: "row", marginTop: 15 }}>
-                <Avatar.Image
-                  source={require("../assets/logov.png")}
-                  size={50}
-                />
+                <View style={{}}>
+                  <Image
+                    style={{
+                      resizeMode: "contain",
+                      height: 50,
+                      width: 60,
+                      alignSelf: "center",
+                    }}
+                    source={require("../assets/newLogo.png")}
+                  />
+                </View>
+
                 <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                  <Title style={styles.title}>John Doe</Title>
-                  <Caption style={styles.caption}>@j_doe</Caption>
+                  <Title style={styles.title}>{userAuth.userName}</Title>
+                  <Caption style={styles.caption}>{userAuth?.company}</Caption>
                 </View>
               </View>
             </View>

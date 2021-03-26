@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native";
+/* import { useTheme } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import AppText from "../components/AppText";
@@ -152,3 +152,4 @@ const styles = StyleSheet.create({
 });
 
 export default QueueScreen;
+ */

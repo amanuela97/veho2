@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
 
@@ -23,12 +23,16 @@ import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { AuthContextMain } from "../context/AppAuthContextMain";
 import { useTheme } from "@react-navigation/native";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
+import { getCompanyList } from "../Api/DbRequests";
+import { db_auth, db_store } from "../Api/Db";
+import { isLoaded } from "expo-font";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(4).label("Password"),
+  code: Yup.string().required().label("registration Code"),
 });
 const categories = [
   {
@@ -37,30 +41,70 @@ const categories = [
 ];
 
 function SignupScreen() {
-  const [value, setValue] = useState();
-  const [pickedItem, setPickedItem] = useState("veho");
-  const [error, setError] = useState();
+  const [pickedItem, setPickedItem] = useState("veho airport");
+  const [mounted, setMounted] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [companyList, setCompanyList] = useState([]);
+  const [error, setError] = useState("");
   const { register } = useContext(AuthContextMain);
-  const registerApi = useApi(register);
+  const getCompanyListApi = useApi(getCompanyList);
   const { colors } = useTheme();
   const handlePickerSelection = (item) => {
-    setPickedItem(item.itemName);
+    setPickedItem(item.name);
+  };
+
+  const displayCompanyList = async () => {
+    const company = await getCompanyListApi.request();
+
+    if (company.error) {
+      setError(result.data);
+    }
+    if (!company.error) {
+      setError("");
+      await setCompanyList(company.data);
+    }
   };
 
   const handleRegister = async (userInfo) => {
+    if (userInfo.code !== `veho go charge ${pickedItem}`) {
+      setError("unable to register");
+      return;
+    }
+
     setError("");
     userInfo.company = pickedItem;
-    userInfo.phoneNumber = value;
-    const result = await registerApi.request(userInfo);
-    if (result.error) {
-      setError(result.data);
-      console.log("the error", error);
-    }
-    if (!result.error) {
-      setError("");
+    setLoading(true);
+    const result = await register(userInfo);
+    if (mounted) {
+      if (result.error) {
+        setLoading(false);
+        setError(result.data);
+        console.log("the error", error);
+      }
     }
   };
-  if (registerApi.loading) {
+  useEffect(() => {
+    const collection = [];
+    var docRef = db_store
+      .collection("company")
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.docs.map((doc) => {
+          collection.push(doc.data());
+        });
+        setCompanyList(collection);
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+    return () => {
+      setLoading(false);
+      setMounted(false);
+      setError("");
+    };
+  }, []);
+
+  if (getCompanyListApi.loading || loading) {
     return <ActivityIndicator visible={true} />;
   }
 
@@ -80,7 +124,7 @@ function SignupScreen() {
           >
             <AppPicker
               icon="format-list-checkbox"
-              items={categories}
+              items={companyList}
               numberOfColumns={1}
               PickerItemComponent={PickerItem}
               onSelectItem={handlePickerSelection}
@@ -115,14 +159,14 @@ function SignupScreen() {
               secureTextEntry
               textContentType="password"
             />
-
-            <PhoneInput
-              placeholder={i18n.t("enterPhoneNumber")}
-              value={value}
-              onChangeFormattedText={(item) => setValue(item)}
+            <FormField
+              autoCorrect={false}
+              name="code"
+              placeholder={i18n.t("registrationCode")}
             />
+
             <View style={styles.button}>
-              <SubmitButton title={i18n.t("Register" )}/>
+              <SubmitButton title={i18n.t("Register")} />
             </View>
           </Form>
           <ErrorMessage error={error} visible={error} />

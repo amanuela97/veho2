@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+/* import React, { createContext, useContext, useEffect, useState } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { db_store } from "../Api/Db";
 import { createQueue } from "../Api/DbRequests";
@@ -47,14 +47,14 @@ function ChargerDetailScreen({ route, navigation }) {
     setPickedItem(item.itemName);
   };
   useEffect(() => {
-    /*  updater();
+     updater();
     const subscribe = db_store
       .collection("veho")
       .doc(charger.id)
       .onSnapshot((snapshot) => {
         setChargerDetail(snapshot.data());
       });
-    return () => subscribe(); */
+    return () => subscribe();
   }, []);
 
   if (createQueueApi.loading) {

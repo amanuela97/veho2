@@ -18,7 +18,7 @@ import { addVehicle, handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { Picker } from "@react-native-picker/picker";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 import { db_auth } from "../Api/Db";
 
 const validationSchema = Yup.object().shape({
@@ -31,11 +31,8 @@ function AddVehicleScreen({ navigation }) {
   const [loginErrorVisible, setLoginErrorVisible] = useState(false);
   const [uploadVisible, setUploadVisible] = useState(false);
   const [picker, setPicker] = useState("licensePlate");
-  const [value, setValue] = React.useState("first");
   const addVehicleApi = useApi(handleAddCar);
   const addVehicleDataApi = useApi(addVehicle);
-  const { user } = useContext(AppAuthContext);
-  const { colors } = useTheme();
 
   const handleSubmit = async (vehicleInfo) => {
     // if vin and plate fields are both empty return
@@ -44,7 +41,6 @@ function AddVehicleScreen({ navigation }) {
       return;
     }
     const result = await addVehicleApi.request(vehicleInfo, picker);
-    console.log("nowwwwww", result);
     const vehicleDa = result.data;
     if (!result.error && vehicleDa.carInfo !== undefined) {
       //   const vehicleD = addVehicleDataApi.request(vehicleInfo,)
@@ -61,7 +57,11 @@ function AddVehicleScreen({ navigation }) {
     }
     if (!result.error && vehicleDa.catInfo === undefined) {
       Alert.alert(
-        `${picker==="licensePlate"? i18n.t("licensePlateNumber"): i18n.t("vinNumber")} ${i18n.t("isValid")}`,
+        `${
+          picker === "licensePlate"
+            ? i18n.t("licensePlateNumber")
+            : i18n.t("vinNumber")
+        } ${i18n.t("isValid")}`,
         i18n.t("registerAnyway"),
         [
           {
@@ -104,7 +104,6 @@ function AddVehicleScreen({ navigation }) {
           onDone={() => {
             console.log("ddddddddbbbbbdddduuuuudddd");
             setUploadVisible(false);
-            navigation.goBack();
           }}
           visible={uploadVisible}
         />

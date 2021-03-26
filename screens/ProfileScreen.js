@@ -31,7 +31,8 @@ import { deleteAccount } from "../Api/AppAuth";
 import useApi from "../hooks/useApi";
 import { result } from "validate.js";
 import UploadScreen from "./UploadScreen";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
+import { AuthContextMain } from "../context/AppAuthContextMain";
 
 let newWidth = 100;
 let newHeight = 100;
@@ -39,14 +40,14 @@ let quality = 1;
 let rotation = 0;
 
 function ProfileScreen({ navigation }) {
-  const { user } = useContext(AppAuthContext);
-  const deleteAccountApi = useApi(deleteAccount);
-  const { colors } = useTheme();
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(true);
+  const { userAuth, setUserAuth } = useContext(AuthContextMain);
+  const deleteAccountApi = useApi(deleteAccount);
+  const { colors } = useTheme();
 
   const handleDelete = async () => {
-    const request = await deleteAccountApi.request(user.userId);
+    const request = await deleteAccountApi.request(userAuth.userId);
     if (request.error) {
       const err = request.data;
       console.log(err);
@@ -60,7 +61,7 @@ function ProfileScreen({ navigation }) {
   };
 
   //select the image
-  const pickImage = async () => {
+  /*  const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -69,19 +70,19 @@ function ProfileScreen({ navigation }) {
     });
 
     handleImagePicked(result);
-  };
+  }; */
   // take photo from camera
-  const takePhoto = async () => {
+  /*  const takePhoto = async () => {
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });
 
     handleImagePicked(pickerResult);
-  };
+  }; */
 
   // resize image and store in firebase storage
-  const handleImagePicked = async (result) => {
+  /*  const handleImagePicked = async (result) => {
     try {
       if (!result.cancelled) {
         const manipResult = await ImageManipulator.manipulateAsync(
@@ -109,12 +110,13 @@ function ProfileScreen({ navigation }) {
       setUploading(false);
     }
   };
-
+ */
   return (
     <Screen style={styles.screen}>
       <ListItem
-        title={user?.userName}
-        subTitle={user?.email}
+        title={userAuth?.userName}
+        subTitle={userAuth?.email}
+        company={userAuth?.company}
         chevron={false}
         backgroundColor={colors.header}
       />
@@ -122,7 +124,7 @@ function ProfileScreen({ navigation }) {
       <View style={styles.mini}>
         <ListItem
           title={i18n.t("username")}
-          subTitle={user.userName}
+          subTitle={userAuth.userName}
           backgroundColor={colors.header}
           IconComponent={<Icon name="face-profile" backgroundColor="green" />}
           onPress={() =>
@@ -133,9 +135,9 @@ function ProfileScreen({ navigation }) {
             })
           }
         />
-        <ListItem
+        {/*     <ListItem
           title={i18n.t("phoneNumber")}
-          subTitle={user.phoneNumber}
+          subTitle={userAuth.phoneNumber}
           backgroundColor={colors.header}
           IconComponent={<Icon name="phone-log" backgroundColor="orange" />}
           onPress={() =>
@@ -145,7 +147,7 @@ function ProfileScreen({ navigation }) {
               password: "none",
             })
           }
-        />
+        /> */}
       </View>
       <View style={styles.mini}>
         <ListItem
@@ -161,35 +163,36 @@ function ProfileScreen({ navigation }) {
             })
           }
         />
-        <ListItem
-          title={i18n.t("deleteAccount")}
-          subTitle={user.userName}
-          backgroundColor={colors.header}
-          chevron={false}
-          IconComponent={<Icon name="delete-sweep" backgroundColor="red" />}
-          onPress={() => {
-            //var user = db_auth.currentUser;
-            Alert.alert(
-              i18n.t("deleteAccount"),
-              i18n.t("areYouSureYouWantToDeleteAccount"),
-              [
-                {
-                  text: i18n.t("No"),
-                  onPress: () => console.log("Cancel Pressed"),
-                  style: "cancel",
-                },
-                {
-                  text: i18n.t("Yes"),
-                  onPress: () => {
-                    handleDelete();
-                  },
-                },
-              ],
-              { cancelable: false }
-            );
-          }}
-        />
       </View>
+      <ListItem
+        title={i18n.t("deleteAccount")}
+        subTitle={userAuth.userName}
+        backgroundColor={colors.header}
+        chevron={false}
+        IconComponent={<Icon name="delete-sweep" backgroundColor="red" />}
+        onPress={() => {
+          //var user = db_auth.currentUser;
+          Alert.alert(
+            i18n.t("deleteAccount"),
+            i18n.t("areYouSureYouWantToDeleteAccount"),
+            [
+              {
+                text: i18n.t("No"),
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel",
+              },
+              {
+                text: i18n.t("Yes"),
+                onPress: () => {
+                  handleDelete();
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        }}
+      />
+
       <View style={styles.logout}>
         <ListItem
           title={i18n.t("signOut")}

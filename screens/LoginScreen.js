@@ -24,7 +24,8 @@ import useApi from "../hooks/useApi";
 import { loginUser } from "../Api/AppAuth";
 import { db_auth } from "../Api/Db";
 import { AuthContextMain } from "../context/AppAuthContextMain";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
+import ActivityIndicator from "../components/ActivityIndicator";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -33,20 +34,29 @@ const validationSchema = Yup.object().shape({
 
 function LoginScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useContext(AuthContextMain);
   const [loginErrorVisible, setLoginErrorVisible] = useState(false);
   const { colors } = useTheme();
-  const loginApi = useApi(login);
-  console.log("presssed");
-
-  console.log(db_auth.currentUser);
 
   const handleSubmit = async (userInfo) => {
     setLoginErrorVisible(false);
-    const result = await loginApi.request(userInfo);
-
-    setLoginErrorVisible(result.error);
+    const password = userInfo.password;
+    const email = userInfo.email;
+    setIsLoading(true);
+    db_auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {})
+      .catch((error) => {
+        setLoginErrorVisible(true);
+        setIsLoading(false);
+      });
   };
+
+  if (isLoading) {
+    return <ActivityIndicator visible={true} />;
+  }
+
   return (
     <Screen style={styles.container}>
       <Animatable.View
@@ -54,7 +64,15 @@ function LoginScreen({ navigation }) {
         duration={2000}
         style={styles.header}
       >
-        <Logo veho={colors.negative} />
+        <Image
+          style={{
+            resizeMode: "contain",
+            height: 100,
+            width: 200,
+            alignSelf: "center",
+          }}
+          source={require("../assets/newLogo.png")}
+        />
       </Animatable.View>
       <Animatable.View
         animation="zoomInUp"
@@ -94,7 +112,7 @@ function LoginScreen({ navigation }) {
             onPress={() => setModalVisible(true)}
           >
             <AppText style={[{ color: colors.primary }]}>
-            {i18n.t("Forget")} {i18n.t("Password")} ?
+              {i18n.t("Forget")} {i18n.t("Password")} ?
             </AppText>
 
             <ForgetPasswordDialog

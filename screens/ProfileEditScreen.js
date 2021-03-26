@@ -15,16 +15,16 @@ import {
 import { ErrorMessage } from "../components/forms";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
+import { AuthContextMain } from "../context/AppAuthContextMain";
 
 function ProfileEditScreen({ route, navigation }) {
   const [userInfo, setUserInfo] = useState("");
   const [error, setError] = useState("");
   const [uploadVisible, setUploadVisible] = useState(false);
   const [emptyContent, setEmptyContent] = useState(false);
+  const { userAuth, setUserAuth } = useContext(AuthContextMain);
   const { userName, phoneNumber, password } = route.params;
-
-  const { user, setUser } = useContext(AppAuthContext);
 
   const updateUsernameApi = useApi(updateUsername);
   const updatePhoneNumberApi = useApi(updatePhoneNumber);
@@ -37,9 +37,9 @@ function ProfileEditScreen({ route, navigation }) {
 
       setError("empty field");
     } else {
-      const result = await updateUsernameApi.request(userInfo, user.userId);
+      const result = await updateUsernameApi.request(userInfo, userAuth.userId);
       if (!result.error) {
-        setUser(result.data);
+        setUserAuth(result.data);
         setUploadVisible(true);
       } else {
         setError(result.data);
@@ -53,9 +53,12 @@ function ProfileEditScreen({ route, navigation }) {
 
       setError("empty field");
     } else {
-      const result = await updatePhoneNumberApi.request(userInfo, user.userId);
+      const result = await updatePhoneNumberApi.request(
+        userInfo,
+        userAuth.userId
+      );
       if (!result.error) {
-        setUser(result.data);
+        setUserAuth(result.data);
         setUploadVisible(true);
       } else {
         setError(result.data);
@@ -106,7 +109,7 @@ function ProfileEditScreen({ route, navigation }) {
         <Card style={[styles.textInputCard, { display: userName }]}>
           <TextInput
             style={[styles.textInput, { color: colors.text }]}
-            placeholder={user.userName}
+            placeholder={userAuth.userName}
             clearButtonMode="while-editing"
             placeholderTextColor={colors.textLight}
             autoCorrect={false}
@@ -119,7 +122,7 @@ function ProfileEditScreen({ route, navigation }) {
         <Card style={[styles.textInputCard, { display: phoneNumber }]}>
           <TextInput
             style={[styles.textInput, { color: colors.text }]}
-            placeholder={user.phoneNumber}
+            placeholder={userAuth.phoneNumber}
             clearButtonMode="while-editing"
             maxLength={30}
             textContentType="telephoneNumber"

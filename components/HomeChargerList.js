@@ -1,16 +1,12 @@
 import { useTheme } from "@react-navigation/native";
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Card } from "react-native-paper";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
 import AppText from "./AppText";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 
 function HomeChargerList({ onPress, item, renderRightActions }) {
   const { colors } = useTheme();
@@ -24,19 +20,19 @@ function HomeChargerList({ onPress, item, renderRightActions }) {
   return (
     <Swipeable renderRightActions={renderRightActions}>
       <TouchableOpacity onPress={onPress}>
-        <View style={[styles.container, { backgroundColor: colors.header }]}>
+        <View style={[styles.container, { backgroundColor: colors.primary }]}>
           <View style={styles.itemContainer}>
             <View style={styles.innerContainer}>
               <View style={styles.leftContainer}>
                 <AppText
                   style={{
                     fontFamily: "OpenSans_600SemiBold",
-                    color: colors.text,
+                    color: "white",
                   }}
                 >
                   {item.name}
                 </AppText>
-                <AppText style={{ color: colors.textLight }}>{i18n.t("fast")}</AppText>
+                <AppText style={{ color: "white" }}>{i18n.t("fast")}</AppText>
               </View>
               <View style={styles.rightContainer}>
                 <View

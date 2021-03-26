@@ -9,11 +9,9 @@ import { Avatar } from "react-native-paper";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "@react-navigation/native";
 import ChargerDetailScreen from "../screens/ChargerDetailScreen";
-import CommentScreen from "../screens/CommentScreen";
 import CreateQueueScreen from "../screens/CreateQueueScreen";
 import QueueScreen from "../screens/QueueScreen";
-import i18n from 'i18n-js';
-
+import i18n from "i18n-js";
 
 const Stack = createStackNavigator();
 
@@ -48,14 +46,13 @@ const HomeStack = ({ navigation }) => {
               <SimpleLineIcons
                 name="grid"
                 size={20}
-                color={colors.primary}
+                color={colors.negative}
                 onPress={() => navigation.openDrawer()}
               />
             </View>
           ),
         }}
       />
-      <Stack.Screen name="Charger" component={ChargerDetailScreen} />
     </Stack.Navigator>
   );
 };

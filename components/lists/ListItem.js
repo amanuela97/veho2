@@ -12,6 +12,7 @@ function ListItem({
   image,
   IconComponent,
   onPress,
+  company,
   renderRightActions,
   chevron = true,
   backgroundColor = "#fff",
@@ -33,6 +34,11 @@ function ListItem({
             {subTitle && (
               <AppText style={[styles.subTitle, { color: colors.textLight }]}>
                 {subTitle}
+              </AppText>
+            )}
+            {company && (
+              <AppText style={[styles.subTitle, { color: colors.textLight }]}>
+                {company}
               </AppText>
             )}
           </View>

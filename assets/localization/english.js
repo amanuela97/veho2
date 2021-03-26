@@ -101,9 +101,11 @@ const english = {
   SlowCharging: "Slow Charging",
   FastCharging: "Fast Charging",
   Discharging: "Discharging",
+  position: "position",
   Nocharging: "No charging",
   Chargingforeignobjectdetection: "Charging foreign object detection",
   vehiclenotconnected: "vehicle not connected",
+  registrationCode: "registration code",
 
   isValid: "is invalid",
   registerAnyway: "Register vehicle anyways?",

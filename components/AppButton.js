@@ -6,11 +6,13 @@ function AppButton({
   onPress,
   color = "#00adef",
   buttonWidth = "100%",
+  buttonIsInActive = false,
 }) {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: color, width: buttonWidth }]}
       onPress={onPress}
+      disabled={buttonIsInActive}
     >
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>

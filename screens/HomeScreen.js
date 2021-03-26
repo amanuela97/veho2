@@ -5,55 +5,33 @@ import {
   FlatList,
   TextInput,
   Image,
-  Alert,
+  Platform,
 } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import AppButton from "../components/AppButton";
 import AppText from "../components/AppText";
-import { SimpleLineIcons } from "@expo/vector-icons";
 import { useTheme } from "@react-navigation/native";
 import { db_auth, db_store } from "../Api/Db";
-import { AppAuthContext } from "../context/AppAuthContext";
 import { StatusBar } from "expo-status-bar";
-
-import { set } from "react-native-reanimated";
-import {
-  chargerListener,
-  getChargers,
-  getQueueList,
-  getUserData,
-} from "../Api/DbRequests";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { getChargers, getQueueList, getUserData } from "../Api/DbRequests";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { Card } from "react-native-paper";
 import { FontAwesome5 } from "@expo/vector-icons";
 import HomeChargerList from "../components/HomeChargerList";
-import HomeQueueListCard from "../components/HomeQueueListCard";
-import QueueModal from "../components/QueueModal";
-import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
-import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AuthContextMain } from "../context/AppAuthContextMain";
-import i18n from 'i18n-js';
+import i18n from "i18n-js";
 
 function HomeScreen({ navigation }) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [error, setError] = useState();
   const [chargers, setChargers] = useState([]);
-  const [chargingCars, setChargingCars] = useState([]);
-  const [queueModalContent, setQueueModalContent] = useState({});
-  const [queueVisible, setQueueVisible] = useState(false);
-  const [userQueue, setUserQueue] = useState([]);
+
   const [totalQueue, setTotalQueue] = useState([]);
   const [chargerSearch, setChargerSearch] = useState([]);
-  const { user, setUser } = useContext(AppAuthContext);
-  const { userAuth, logout } = useContext(AuthContextMain);
+  const { userAuth, setUserAuth } = useContext(AuthContextMain);
 
   const chargerListApi = useApi(getChargers);
   const queueListApi = useApi(getQueueList);
+  const getUserDataApi = useApi(getUserData);
 
   const displayChargers = async () => {
     const chargers = await chargerListApi.request();
@@ -70,39 +48,88 @@ function HomeScreen({ navigation }) {
   };
   const handleGetQueueList = async () => {
     const list = await queueListApi.request();
+
     if (!list.error) {
       setTotalQueue(list.data);
     }
-    console.log("jjjjjjjjjjjjj");
   };
 
   const setUserData = async () => {
-    const userD = await getUserData();
-    await setUser(userD.data);
-    console.log("lll", userD);
-    console.log("the userrrr", user);
+    if (userAuth.company == undefined) {
+      const userD = await getUserDataApi.request();
+
+      if (!userD.error && userD.data) {
+        if (userD.data.type == "admin") {
+          return db_auth.signOut();
+        }
+        await setUserAuth(userD.data);
+        await displayChargers();
+        await handleGetQueueList();
+      } else return;
+    } else {
+      const userD = await getUserDataApi.request();
+
+      if (!userD.error && userD.data) {
+        if (userD.data.type == "admin") {
+          return db_auth.signOut();
+        }
+        await setUserAuth(userD.data);
+        await displayChargers();
+        await handleGetQueueList();
+      } else {
+        return;
+      }
+    }
+  };
+
+  const getUser = async () => {
+    const userD = await getUserDataApi.request();
+    if (!userD.error && userD.data) {
+      if (userD.data.type == "admin") {
+        return db_auth.signOut();
+      }
+      await setUserAuth(userD.data);
+      await displayChargers();
+      await handleGetQueueList();
+    } else if (!userD.error && userD.data == undefined) {
+      try {
+        await db_auth.currentUser.delete();
+        return;
+      } catch (e) {}
+    }
+
+    return;
   };
 
   useEffect(() => {
     setUserData();
-    handleGetQueueList();
     const unsubscribe = db_store.collection("veho").onSnapshot((snapshot) => {
       let newList = [];
       snapshot.forEach((doc) => {
-        newList.push(doc.data());
+        const data = doc.data();
+        console.log(data.company, userAuth.company);
+        if (data.company == userAuth.company) {
+          newList.push(doc.data());
+          setChargers(newList);
+        }
       });
-      //chargerListener(newList);
-      displayChargers();
     });
-    const unsubscribeQueue = db_store
-      .collection("queue")
-      .onSnapshot((snapshot) => {
+    const unsubscribeQueue = db_store.collection("queue").onSnapshot(
+      (snapshot) => {
         let newList = [];
+
         snapshot.forEach((doc) => {
-          newList = doc.data().queue;
+          if (doc.id == userAuth.company) {
+            newList = doc.data().queue;
+            setTotalQueue(newList);
+          }
+          return;
         });
-        setTotalQueue(newList);
-      });
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
     return () => {
       unsubscribe();
       unsubscribeQueue();
@@ -111,19 +138,21 @@ function HomeScreen({ navigation }) {
 
   const { colors } = useTheme();
 
-  if (chargerListApi.loading) {
+  if (getUserDataApi.loading) {
     return <ActivityIndicator visible={chargerListApi.loading} />;
   }
+
   return (
     <View style={styles.container}>
-      {colors.light ? <StatusBar style="dark" /> : <StatusBar style="light" />}
+      {colors.light ? <StatusBar style="light" /> : <StatusBar style="light" />}
 
       <View style={styles.queueContainer}>
         <Card
           style={{
             width: "94%",
             height: "80%",
-            backgroundColor: "#112222",
+            borderRadius: 10,
+            backgroundColor: "black",
           }}
         >
           <View
@@ -134,6 +163,9 @@ function HomeScreen({ navigation }) {
               alignItems: "center",
             }}
           >
+            <View>
+              <Image source={require("../assets/queue2.png")} style={{}} />
+            </View>
             <AppText
               style={{
                 fontFamily: "OpenSans_700Bold",
@@ -154,7 +186,9 @@ function HomeScreen({ navigation }) {
                 {totalQueue.length}
               </AppText>
             ) : (
-              <AppText style={{ color: colors.textLight }}>{i18n.t("noQueue")}</AppText>
+              <AppText style={{ color: colors.textLight }}>
+                {i18n.t("noQueue")}
+              </AppText>
             )}
           </View>
         </Card>
@@ -164,8 +198,8 @@ function HomeScreen({ navigation }) {
         <View style={styles.chargerSectionHeader}>
           <View style={{ width: "100%" }}>
             <View style={{ alignSelf: "flex-start", width: "100%" }}>
-              <AppText style={[styles.sectionTitle, { color: colors.text }]}>
-              {i18n.t("chargers")}
+              <AppText style={[styles.sectionTitle, { color: "white" }]}>
+                {i18n.t("chargers")}
               </AppText>
             </View>
             <Card style={styles.textInputCard}>
@@ -174,7 +208,7 @@ function HomeScreen({ navigation }) {
                   <FontAwesome5
                     name="searchengin"
                     size={20}
-                    color={colors.textLight}
+                    color={colors.primary}
                   />
                 </View>
                 <TextInput
@@ -190,43 +224,28 @@ function HomeScreen({ navigation }) {
             </Card>
           </View>
         </View>
-        <FlatList
-          data={chargers}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(list) => list.id}
-          renderItem={({ item }) => (
-            <HomeChargerList
-              item={item}
-              onPress={() => {
-                if (item.status === "busy") {
-                  Alert.alert(
-                    "",
-                    i18n.t("thisChargerBusySelectFree"),
-                    [
-                      {
-                        text: "ok ",
-                        onPress: () => {},
-                      },
-                    ],
-                    { cancelable: true }
-                  );
-                } else {
-                  Alert.alert(
-                    "",
-                    i18n.t("pleaseCreateQueueOntheVehicleScreen"),
-                    [
-                      {
-                        text: "ok ",
-                        onPress: () => {},
-                      },
-                    ],
-                    { cancelable: true }
-                  );
-                }
-              }}
-            />
-          )}
-        />
+        {userAuth.company ? (
+          <FlatList
+            data={chargers}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(list) => list.id}
+            renderItem={({ item }) => <HomeChargerList item={item} />}
+          />
+        ) : (
+          <TouchableOpacity
+            style={{
+              padding: 10,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => getUser()}
+          >
+            <MaterialCommunityIcons name="refresh" size={40} color="white" />
+            <AppText style={{ color: "white" }}>
+              Please press to refresh your page
+            </AppText>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -254,7 +273,7 @@ const styles = StyleSheet.create({
   },
   totalQueueTO: {
     backgroundColor: "#333333",
-    width: wp("100%"),
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -267,6 +286,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     paddingBottom: 10,
+    backgroundColor: "black",
+    paddingHorizontal: 10,
+    borderRadius: Platform.OS === "ios" ? 10 : 0,
   },
   noQueueContainer: {
     paddingVertical: 10,

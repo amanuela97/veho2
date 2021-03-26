@@ -66,7 +66,7 @@ function AppPicker({
             <FlatList
               data={items}
               keyExtractor={(item) =>
-                item.vehicleId ? item.vehicleId : item.itemName
+                item.vehicleId ? item.vehicleId : item.name
               }
               numColumns={numberOfColumns}
               renderItem={({ item }) => (
