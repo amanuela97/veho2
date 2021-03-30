@@ -9,23 +9,19 @@ import {
   FormField,
   SubmitButton,
 } from "../components/forms";
-import { View } from "native-base";
-import Logo from "../components/Logo";
+
 import AppText from "../components/AppText";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Modal from "react-native-modal";
-import { Card, Colors } from "react-native-paper";
+import { Colors } from "react-native-paper";
 import ForgetPasswordDialog from "../components/ForgetPasswordDialog";
 import AppButton from "../components/AppButton";
 import { useTheme } from "@react-navigation/native";
 import * as Animatable from "react-native-animatable";
-import { result } from "validate.js";
-import useApi from "../hooks/useApi";
-import { loginUser } from "../Api/AppAuth";
 import { db_auth } from "../Api/Db";
 import { AuthContextMain } from "../context/AppAuthContextMain";
 import i18n from "i18n-js";
 import ActivityIndicator from "../components/ActivityIndicator";
+import { StatusBar } from "expo-status-bar";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -59,6 +55,7 @@ function LoginScreen({ navigation }) {
 
   return (
     <Screen style={styles.container}>
+      <StatusBar style={colors.light ? "dark" : "light"} />
       <Animatable.View
         animation="zoomInDown"
         duration={2000}
@@ -71,7 +68,11 @@ function LoginScreen({ navigation }) {
             width: 200,
             alignSelf: "center",
           }}
-          source={require("../assets/newLogo.png")}
+          source={
+            colors.light
+              ? require("../assets/logo_drawer_black.png")
+              : require("../assets/newLogo.png")
+          }
         />
       </Animatable.View>
       <Animatable.View

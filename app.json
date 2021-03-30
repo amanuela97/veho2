@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "vehoGo charger",
-    "slug": "test-app",
+    "name": "Veho Go Charger",
+    "description":"an app for managing car chargers",
+    "slug": "VEHO-GO-CHARGE",
     "platforms":["ios","android","web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logov.png",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -18,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier":"com.veho-go.charge"
     },
     "web": {
       "favicon": "./assets/favicon.png"

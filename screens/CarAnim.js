@@ -1,11 +1,7 @@
 import React from "react";
-import { View, StyleSheet, Modal } from "react-native";
+import { View, StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
 import { useTheme } from "@react-navigation/native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
 function CarAnim({ autoPlayAnim }) {
   const { colors } = useTheme();
@@ -15,7 +11,7 @@ function CarAnim({ autoPlayAnim }) {
       <LottieView
         autoPlay
         loop={autoPlayAnim}
-        source={require("../assets/chcha.json")}
+        source={require("../assets/carAnim.json")}
         style={styles.animation}
       />
     </View>

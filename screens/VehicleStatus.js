@@ -8,36 +8,25 @@ import {
   getVehicles,
   deleteVehicle,
   createChargingQueue,
-  updateVehicle,
   cancelQueue,
   updateVehicleSingleInfo,
 } from "../Api/DbRequests";
 import ActivityIndicator from "../components/ActivityIndicator";
 import AppText from "../components/AppText";
 import Icon from "../components/Icon";
-import {
-  ListItem,
-  ListItemDeleteAction,
-  ListItemSeparator,
-} from "../components/lists";
-import { AppAuthContext } from "../context/AppAuthContext";
+import { ListItemDeleteAction, ListItemSeparator } from "../components/lists";
 import useApi from "../hooks/useApi";
-import UploadScreen from "./UploadScreen";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Card } from "react-native-paper";
-import { fetchCarDetails, fetchToken } from "../Api/CarApi";
 import { db_store, db_auth } from "../Api/Db";
 import ListItemCar from "../components/lists/ListItemCar";
 import ListItemAddQueueAction from "../components/lists/ListItemAddQueueAction ";
 import CarAnim from "./CarAnim";
 import useNotifications from "../hooks/useNotifications";
-import AppButton from "../components/AppButton";
-import { result } from "validate.js";
 import i18n from "i18n-js";
 import { AuthContextMain } from "../context/AppAuthContextMain";
 
 function VehicleStatus({ navigation }) {
-  const [error, setError] = useState();
   const [vehicles, setVehicles] = useState([]);
   const [searchVehicles, setSearchVehicles] = useState([]);
   const [uploadVisible, setUploadVisible] = useState(false);
@@ -51,7 +40,6 @@ function VehicleStatus({ navigation }) {
   const acceptQueueApi = useApi(updateVehicleSingleInfo);
   useNotifications();
   const handleGetVehicles = async () => {
-    console.log("caledd");
     const vehiclesList = await getVehicleApi.request();
     await setVehicles(vehiclesList.data);
     setSearchVehicles(vehiclesList.data);
@@ -77,7 +65,6 @@ function VehicleStatus({ navigation }) {
 
   const handleCreateQueue = async (vehicle) => {
     const queue = await createQueueApi.request(vehicle, userAuth);
-    console.log(queue);
     if (!queue.error) {
       setUploadVisible(true);
     }

@@ -2,10 +2,8 @@ import { useTheme } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
 import { Card } from "react-native-paper";
-import { FontAwesome5 } from "@expo/vector-icons";
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
-import { AppAuthContext } from "../context/AppAuthContext";
 import useApi from "../hooks/useApi";
 import {
   updateUsername,

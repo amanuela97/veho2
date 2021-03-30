@@ -15,7 +15,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
 import { AppContext } from "../context/AppThemeContext";
-import { useTheme } from "@react-navigation/native";
+import { DarkTheme, useTheme } from "@react-navigation/native";
 import { AuthContextMain } from "../context/AppAuthContextMain";
 import i18n from "i18n-js";
 
@@ -38,7 +38,11 @@ export function DrawerContent(props) {
                       width: 60,
                       alignSelf: "center",
                     }}
-                    source={require("../assets/newLogo.png")}
+                    source={
+                      colors.light
+                        ? require("../assets/logo_drawer_black.png")
+                        : require("../assets/logo_drawer_white.png")
+                    }
                   />
                 </View>
 

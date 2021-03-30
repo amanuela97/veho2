@@ -1,23 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import AppText from "./AppText";
 import Modal from "react-native-modal";
 import { Card, TextInput } from "react-native-paper";
-import Screen from "./Screen";
-import { ErrorMessage, FormField } from "./forms";
-import { Form } from "formik";
-import AppTextInput from "./TextInput";
+import { ErrorMessage } from "./forms";
 import Logo from "./Logo";
 import AppButton from "./AppButton";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { color } from "react-native-reanimated";
 import { useTheme } from "@react-navigation/native";
 import useApi from "../hooks/useApi";
 import { forgerPassword } from "../Api/AppAuth";
-import { result } from "validate.js";
-import i18n from 'i18n-js';
-
+import i18n from "i18n-js";
 
 function ForgetPasswordDialog({ isModalVisible, setVisible }) {
   const { colors } = useTheme();
@@ -75,7 +67,7 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
               {i18n.t("success")}
             </AppText>
             <AppText style={[styles.subtitle, { color: colors.text }]}>
-            {i18n.t("linkToResetPasswordSenttoEmail")}
+              {i18n.t("linkToResetPasswordSenttoEmail")}
             </AppText>
           </View>
         </Card>
@@ -112,10 +104,10 @@ function ForgetPasswordDialog({ isModalVisible, setVisible }) {
             <Logo topFontsize={25} bottomFontsize={40} veho={colors.negative} />
           </View>
           <AppText style={[styles.title, { color: colors.negative }]}>
-          {i18n.t("Forget")} {i18n.t("Password")}?
+            {i18n.t("Forget")} {i18n.t("Password")}?
           </AppText>
           <AppText style={[styles.subtitle, { color: colors.text }]}>
-          {i18n.t("enterTheEmailAddeessAssociatedWithYourAccount")}
+            {i18n.t("enterTheEmailAddeessAssociatedWithYourAccount")}
           </AppText>
           <View style={styles.inputText}>
             <TextInput

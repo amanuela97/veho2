@@ -2,7 +2,6 @@ import { useContext, useEffect } from "react";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import Constants from "expo-constants";
-import { AppAuthContext } from "../context/AppAuthContext";
 import { setUserToken } from "../Api/DbRequests";
 import { db_auth } from "../Api/Db";
 

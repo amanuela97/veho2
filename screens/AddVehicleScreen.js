@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { View, StyleSheet, Alert } from "react-native";
 
-import AppText from "../components/AppText";
 import * as Yup from "yup";
 import {
   ErrorMessage,
@@ -9,15 +8,11 @@ import {
   FormField,
   SubmitButton,
 } from "../components/forms";
-import { useTheme } from "@react-navigation/native";
-import Screen from "../components/Screen";
 import { Appbar, RadioButton, Text } from "react-native-paper";
-import { AppAuthContext } from "../context/AppAuthContext";
 import useApi from "../hooks/useApi";
 import { addVehicle, handleAddCar } from "../Api/DbRequests";
 import UploadScreen from "./UploadScreen";
 import ActivityIndicator from "../components/ActivityIndicator";
-import { Picker } from "@react-native-picker/picker";
 import i18n from "i18n-js";
 import { db_auth } from "../Api/Db";
 

@@ -1,6 +1,5 @@
 import { db_auth, db_store } from "./Db";
 import firebase, { firestore } from "firebase";
-import { Alert } from "react-native";
 import { fetchToken, fetchCarDetails, fetchVin } from "../Api/CarApi";
 import * as SecureStore from "expo-secure-store";
 
@@ -33,7 +32,6 @@ export const getChargers = async () => {
 
 export const getCharger = async (chargerId) => {
   try {
-    console.log("request to a charger");
     const result = await db_store.collection("veho").get(chargerId);
     result.docs.map((doc) => {
       return requestResult(false, doc.data());
@@ -45,7 +43,6 @@ export const getCharger = async (chargerId) => {
 
 export const getCompanyList = async () => {
   try {
-    console.log("request to a company");
     const collection = [];
     const result = await db_store.collection("company").get();
     result.docs.map((doc) => {
@@ -60,13 +57,11 @@ export const getCompanyList = async () => {
 
 export const getUserData = async () => {
   try {
-    console.log("request to a user", db_auth.currentUser.uid);
     const result = await db_store
       .collection("users")
       .doc(db_auth.currentUser.uid)
       .get();
     const user = await result.data();
-    console.log("userrr", user);
     return requestResult(false, user);
   } catch (error) {
     return requestResult(true, "error getting data");
@@ -75,7 +70,6 @@ export const getUserData = async () => {
 
 export const createQueue = async (userId, userName, chargerId) => {
   try {
-    console.log("request to queue");
     const data = await db_store
       .collection("veho")
       .doc(chargerId)
@@ -87,41 +81,35 @@ export const createQueue = async (userId, userName, chargerId) => {
       });
     return requestResult(false, "updated");
   } catch (error) {
-    console.log("error while queue", error.message);
     return requestResult(true, "unable to create a queue");
   }
 };
 
 export const updateUsername = async (userInfo, userId) => {
   try {
-    console.log("request to update user info");
     const update = await db_store.collection("users").doc(userId).update({
       userName: userInfo,
     });
     const data = await db_store.collection("users").doc(userId).get();
     return requestResult(false, data.data());
   } catch (error) {
-    console.log("error while updating", error.message);
     return requestResult(true, "unable to update");
   }
 };
 
 export const updatePhoneNumber = async (userInfo, userId) => {
   try {
-    console.log("request to update user info");
     const update = await db_store.collection("users").doc(userId).update({
       phoneNumber: userInfo,
     });
     const data = await db_store.collection("users").doc(userId).get();
     return requestResult(false, data.data());
   } catch (error) {
-    console.log("error while updating", error.message);
     return requestResult(true, "unable to update");
   }
 };
 export const setUserToken = async (userInfo, userId) => {
   try {
-    console.log("request to update user info");
     const token = await db_store.collection("users").doc(userId).update({
       expoToken: userInfo,
     });
@@ -135,12 +123,9 @@ export const setUserToken = async (userInfo, userId) => {
 
 export const updatePassword = async (userInfo) => {
   try {
-    console.log("request to change password info");
     const update = await db_auth.currentUser.updatePassword(userInfo);
-    // const data = await db_store.collection("users").doc(userId).get();
     return requestResult(false, update);
   } catch (error) {
-    console.log("error while updating", error.message);
     return requestResult(true, error.message);
   }
 };
@@ -162,7 +147,6 @@ export const handleAddCar = async (vehicleInfo, picker) => {
     if (picker === "licensePlate") {
       vin = await fetchVin(vehicleInfo.licensePlate, token);
     }
-    console.log("jjjjjkkkk", vin, token);
     var carInfo = await fetchCarDetails(token, vin);
 
     var user = db_auth.currentUser;
@@ -181,15 +165,12 @@ export const addVehicle = async (
   connected
 ) => {
   try {
-    console.log("request to add Vehicle");
-    const vehicle = await db_store
-      .collection("vehicle")
-      .doc(vin ? vin : vehicleInfo.licensePlate);
+    const vehicle = await db_store.collection("vehicle").doc();
 
     const vehicleData = await vehicle.set({
       vin: vin ? vin : vehicleInfo.licensePlate,
       name: vehicleInfo.vehicle,
-      vehicleId: vin ? vin : vehicleInfo.licensePlate,
+      vehicleId: vehicle.id,
       ownerId: user,
       connected: connected,
       otherInfo: "null",
@@ -207,10 +188,8 @@ export const addVehicle = async (
       waitingConfirmation: false,
       timestamp: firestore.FieldValue.serverTimestamp(),
     });
-    console.log("adeddd");
     return requestResult(false, vehicleData);
   } catch (error) {
-    console.log("unable to add vehicle", error.message);
     return requestResult(true, "unable to add the vehicle");
   }
 };
@@ -260,7 +239,6 @@ export const createChargingQueue = async (vehicle, user) => {
       .get();
     if (freeCharger.docs[0]) {
       const charger = freeCharger.docs[0].data();
-      console.log("chargerrrr", charger);
       const data = await db_store.collection("veho").doc(charger.id).update({
         status: "busy",
         currentUserId: user.userId,
@@ -290,7 +268,6 @@ export const createChargingQueue = async (vehicle, user) => {
       return requestResult(false, "updated");
     }
   } catch (error) {
-    console.log("error while queue", error.message);
     return requestResult(true, "unable to create a queue");
   }
 };
@@ -307,7 +284,6 @@ export const getQueueList = async () => {
 
     return requestResult(false, queue);
   } catch (error) {
-    console.log("error while getting vehicles", error.message);
     return requestResult(true, error.message);
   }
 };

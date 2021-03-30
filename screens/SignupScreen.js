@@ -9,24 +9,20 @@ import {
   FormField,
   SubmitButton,
 } from "../components/forms";
-import CategoryPickerItem from "../components/CategoryPickerItem";
 import AppPicker from "../components/Picker";
-import PhoneInput from "react-native-phone-number-input";
-import Logo from "../components/Logo";
 import AppText from "../components/AppText";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import PickerItem from "../components/PickerItem";
 import { View } from "native-base";
 import * as Animatable from "react-native-animatable";
-import { registerUser } from "../Api/AppAuth";
 import useApi from "../hooks/useApi";
 import ActivityIndicator from "../components/ActivityIndicator";
 import { AuthContextMain } from "../context/AppAuthContextMain";
 import { useTheme } from "@react-navigation/native";
 import i18n from "i18n-js";
 import { getCompanyList } from "../Api/DbRequests";
-import { db_auth, db_store } from "../Api/Db";
-import { isLoaded } from "expo-font";
+import { db_store } from "../Api/Db";
+import { StatusBar } from "expo-status-bar";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required().label("Name"),
@@ -110,6 +106,7 @@ function SignupScreen() {
 
   return (
     <Screen style={styles.container}>
+      <StatusBar style={colors.light ? "dark" : "light"} />
       <Animatable.View
         animation="slideInUp"
         duration={1000}

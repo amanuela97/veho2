@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import AppText from "../AppText";
 import * as Animatable from "react-native-animatable";
-import Text from "../AppText";
 
 function ErrorMessage({ error, visible, style }) {
   if (!visible || !error) return null;

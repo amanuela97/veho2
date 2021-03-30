@@ -57,12 +57,13 @@ function HomeScreen({ navigation }) {
   const setUserData = async () => {
     if (userAuth.company == undefined) {
       const userD = await getUserDataApi.request();
-
-      if (!userD.error && userD.data) {
-        if (userD.data.type == "admin") {
+      const user = await userD.data;
+      if (!userD.error && user.company) {
+        if (user.type == "admin") {
           return db_auth.signOut();
         }
-        await setUserAuth(userD.data);
+        await setUserAuth(user);
+        //    await setUserAuth(user);
         await displayChargers();
         await handleGetQueueList();
       } else return;
@@ -107,10 +108,13 @@ function HomeScreen({ navigation }) {
       let newList = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
-        console.log(data.company, userAuth.company);
         if (data.company == userAuth.company) {
           newList.push(doc.data());
           setChargers(newList);
+        }
+
+        if (userAuth.company == undefined) {
+          displayChargers();
         }
       });
     });
@@ -123,12 +127,12 @@ function HomeScreen({ navigation }) {
             newList = doc.data().queue;
             setTotalQueue(newList);
           }
-          return;
         });
+        if (userAuth.company == undefined) {
+          handleGetQueueList();
+        }
       },
-      (error) => {
-        console.log(error);
-      }
+      (error) => {}
     );
     return () => {
       unsubscribe();
@@ -144,7 +148,7 @@ function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {colors.light ? <StatusBar style="light" /> : <StatusBar style="light" />}
+      {colors.light ? <StatusBar style="dark" /> : <StatusBar style="light" />}
 
       <View style={styles.queueContainer}>
         <Card

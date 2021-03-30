@@ -3,14 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 
 import { SimpleLineIcons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
-import { Avatar } from "react-native-paper";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTheme } from "@react-navigation/native";
-import ChargerDetailScreen from "../screens/ChargerDetailScreen";
-import CreateQueueScreen from "../screens/CreateQueueScreen";
-import QueueScreen from "../screens/QueueScreen";
 import i18n from "i18n-js";
 
 const Stack = createStackNavigator();
