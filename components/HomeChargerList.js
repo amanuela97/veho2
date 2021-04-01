@@ -32,7 +32,7 @@ function HomeChargerList({ onPress, item, renderRightActions }) {
                 >
                   {item.name}
                 </AppText>
-                <AppText style={{ color: "white" }}>{i18n.t("fast")}</AppText>
+                <AppText style={{ color: "white" }}>{item.type}</AppText>
               </View>
               <View style={styles.rightContainer}>
                 <View
