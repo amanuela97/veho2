@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Veho Go Charger",
+    "name": "Veho Go Charge",
     "description":"an app for managing car chargers",
     "slug": "VEHO-GO-CHARGE",
     "platforms":["ios","android","web"],

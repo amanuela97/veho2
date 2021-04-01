@@ -1,5 +1,5 @@
-import * as SecureStore from 'expo-secure-store';
-
+import * as SecureStore from "expo-secure-store";
+import { V_USER_NAME, V_PASSWD } from "@env";
 export const fetchToken = async () => {
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -10,8 +10,8 @@ export const fetchToken = async () => {
 
   let params = {
     grant_type: "password",
-    username: "vehogo@veho.fi",
-    password: "Vehogoshare1234!",
+    username: V_USER_NAME,
+    password: V_PASSWD,
   };
 
   let query = Object.keys(params)
@@ -28,23 +28,16 @@ export const fetchToken = async () => {
   var token = await fetch(
     "https://api.connect-business.net/fleet/v1/oauth/token",
     requestOptions
-  ).then((response) => response.json())
+  )
+    .then((response) => response.json())
     .then((result) => result)
     .catch((error) => console.log("error", error));
 
-    try{
-      var expires_in = parseInt(Date.now()) + (parseInt(token.expires_in) * 1000);
-      await SecureStore.setItemAsync(
-        'token',
-        token.access_token.toString()
-      );
-      await SecureStore.setItemAsync(
-        'expires_in',
-        expires_in.toString()
-      );
-    }catch(e){
-      console.log(e);
-    }
+  try {
+    var expires_in = parseInt(Date.now()) + parseInt(token.expires_in) * 1000;
+    await SecureStore.setItemAsync("token", token.access_token.toString());
+    await SecureStore.setItemAsync("expires_in", expires_in.toString());
+  } catch (e) {}
 };
 
 export const fetchCarDetails = async (token, vin) => {
@@ -84,10 +77,10 @@ export const fetchVin = async (plate, token) => {
   const res = await fetch(
     `https://api.connect-business.net/fleet/v1/fleets/1A3D13CCC6694F03ADBC1BC6CFADCB4B/vehicles.snapshots?_filter=licensePlate=eq=${plate}`,
     requestOptions
-  ) 
-  .then(response => response.json())
-  .then(result => result.items[0].vin)
-  .catch(error =>  undefined);
+  )
+    .then((response) => response.json())
+    .then((result) => result.items[0].vin)
+    .catch((error) => undefined);
 
-  return res
+  return res;
 };

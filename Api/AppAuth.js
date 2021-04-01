@@ -7,7 +7,6 @@ const requestResult = (hasError, dataReceived) => {
 };
 export const registerUser = async (userInfo) => {
   const requestStatus = { error: true, data: "" };
-  console.log(userInfo);
 
   try {
     await db_auth
@@ -32,7 +31,6 @@ export const registerUser = async (userInfo) => {
       });
     return requestResult(false, "user");
   } catch (error) {
-    console.log("create user error", error);
     return requestResult(true, error.message);
   }
 };
@@ -55,10 +53,8 @@ export const loginUser = async (userInfo) => {
 export const forgerPassword = async (email) => {
   try {
     const mm = await db_auth.sendPasswordResetEmail(email);
-    console.log(mm);
     return requestResult(false, "mee");
   } catch (e) {
-    console.log("eee", e);
     return requestResult(true, "no account with this email address");
   }
 };
@@ -69,7 +65,6 @@ export const deleteAccount = async (id) => {
     const userA = await db_auth.currentUser.delete();
     return requestResult(false, "deleted");
   } catch (e) {
-    console.log(e);
     return requestResult(
       true,
       "This operation is sensitive and requires recent authentication. Log in again before retrying this request"

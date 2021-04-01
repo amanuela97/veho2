@@ -116,7 +116,6 @@ export const setUserToken = async (userInfo, userId) => {
 
     return requestResult(false, token);
   } catch (error) {
-    console.log("error while saving token", error.message);
     return requestResult(true, "unable save token");
   }
 };
@@ -135,9 +134,6 @@ export const handleAddCar = async (vehicleInfo, picker) => {
     // check if token has expired
     var expires_in = await SecureStore.getItemAsync("expires_in");
     if (parseInt(Date.now()) >= parseInt(expires_in) || !expires_in) {
-      console.log(
-        "token has expired or hasnt been generated, refreshing token"
-      );
       await fetchToken();
     }
     var token = await SecureStore.getItemAsync("token");
@@ -166,13 +162,15 @@ export const addVehicle = async (
 ) => {
   try {
     const vehicle = await db_store.collection("vehicle").doc();
-
+    const userI = await db_store.collection("users").doc(user).get();
+    const company = await userI.data().company;
     const vehicleData = await vehicle.set({
       vin: vin ? vin : vehicleInfo.licensePlate,
       name: vehicleInfo.vehicle,
       vehicleId: vehicle.id,
       ownerId: user,
       connected: connected,
+      company: company,
       otherInfo: "null",
       assigned: false,
       batteryState: carInfo ? carInfo.batteryState : "null",
@@ -209,7 +207,6 @@ export const getVehicles = async () => {
 
     return requestResult(false, vehicles);
   } catch (error) {
-    console.log("error while getting vehicles", error.message);
     return requestResult(true, error.message);
   }
 };
@@ -223,14 +220,12 @@ export const deleteVehicle = async (item) => {
     const data = await getVehicles();
     return requestResult(false, data.data);
   } catch (error) {
-    console.log("error while deleting", error.message);
     return requestResult(true, "error deleting vehicle");
   }
 };
 
 export const createChargingQueue = async (vehicle, user) => {
   try {
-    console.log("request to queue");
     const freeCharger = await db_store
       .collection("veho")
       .where("company", "==", user.company)
@@ -335,7 +330,6 @@ export const cancelQueue = async (vehicle, user) => {
       return requestResult(false, "removed");
     }
   } catch (error) {
-    console.log("error while removing", error.message);
     return requestResult(true, "unable to remove a queue");
   }
 };
@@ -386,14 +380,11 @@ export const addCharger = async (
   connected
 ) => {
   try {
-    console.log("request to add Vehicle");
     const vehicle = await db_store.collection("veho airport").doc();
 
     const vehicleData = await vehicle.set({});
-    console.log("adeddd");
     return requestResult(false, vehicleData);
   } catch (error) {
-    console.log("unable to add vehicle", error.message);
     return requestResult(true, "unable to add the vehicle");
   }
 };
