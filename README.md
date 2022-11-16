@@ -8,6 +8,10 @@
 
 https://expo.io/@vehocharger/projects/test-app
 
+The app requires expo-go/client version 2.17.6 for android and 2.17.4 for iOS.
+
+Download the client version mentioned on your mobile device here: [link](https://m.apkpure.com/expo/host.exp.exponent/versions) to run the app using the qr code.
+
 
 Run the command below in your terminal
 
